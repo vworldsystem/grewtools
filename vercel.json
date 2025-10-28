@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/markdown",
+      "destination": "/markdown.html"
+    },
+    {
+      "source": "/shortlink",
+      "destination": "/shortlink.html"
+    },
+    {
+      "source": "/keyword",
+      "destination": "/keyword.html"
+    },
+    {
+      "source": "/affiliate",
+      "destination": "/affiliate.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/policy",
+      "destination": "/policy.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    }
+  ]
+}

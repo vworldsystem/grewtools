@@ -1,0 +1,22 @@
+<!-- /assets/nav.html : 공통 네비게이션 파셜 -->
+<style>
+  :root{--bg:#faf7f2;--green:#6fbf73;--orange:#ffd9b3;--ink:#333;--muted:#777;--line:#e0ddd8}
+  .topbar{position:sticky;top:0;z-index:10;backdrop-filter:blur(6px);background:rgba(255,255,255,.6);border-bottom:1px solid var(--line)}
+  .nav{max-width:1200px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+  .brand{font-weight:700;color:#2e6e33;text-decoration:none}
+  .spacer{flex:1}
+  .nav a{color:#2b2b2b;text-decoration:none;padding:8px 10px;border-radius:12px}
+  .nav a:hover{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+</style>
+<div class="topbar">
+  <nav class="nav">
+    <a class="brand" href="/">GrewTools</a>
+    <a href="/markdown">Markdown 변환기</a>
+    <a href="/shortlink">짧은 주소</a>
+    <a href="/keyword">키워드</a>
+    <a href="/affiliate">쿠팡 링크</a>
+    <div class="spacer"></div>
+    <a href="/blog">블로그</a>
+    <a href="/policy">정책</a>
+  </nav>
+</div>

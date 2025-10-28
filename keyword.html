@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>고수익 키워드 생성기 | GrewTools</title>
+  <meta name="description" content="씨앗 키워드로 고수익 롱테일 키워드를 자동 생성하고 의도별로 묶어주는 무료 도구. 블로그/애드센스/제휴에 최적화." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="canonical" href="https://grewtools.com/keyword" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="GrewTools" />
+  <meta property="og:title" content="고수익 키워드 생성기 | GrewTools" />
+  <meta property="og:description" content="씨앗 키워드로 의도별 롱테일 키워드를 자동 생성하고, 제목·메타까지 한 번에." />
+  <meta property="og:url" content="https://grewtools.com/keyword" />
+  <meta property="og:image" content="https://grewtools.com/assets/og-keyword.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root{
+      --bg:#faf7f2; --green:#6fbf73; --orange:#ffd9b3; --ink:#333; --muted:#777;
+      --card:#ffffff; --soft:#fffdf9; --line:#e0ddd8;
+    }
+    *{box-sizing:border-box}
+    body{font-family:'Noto Sans KR',Pretendard,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+    header{padding:30px 20px;text-align:center;color:#fff;background:linear-gradient(135deg,var(--green),var(--orange));border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+    header h1{margin:0;font-size:1.8em}
+    .wrap{max-width:1100px;margin:40px auto;background:var(--card);border-radius:20px;padding:24px 24px 30px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    label{font-size:.95em;color:#444}
+    input[type=text],select,textarea{border:1px solid #d9d4cd;border-radius:12px;padding:12px 14px;font-size:15px}
+    input[type=text]{flex:1;min-width:220px}
+    select{height:44px}
+    textarea{width:100%;min-height:120px;resize:vertical}
+    button{background:var(--green);color:#fff;border:none;border-radius:20px;padding:12px 18px;font-size:15px;cursor:pointer;transition:.2s}
+    button:hover{background:#5aa261}
+    .card{background:var(--soft);border-radius:16px;padding:16px 16px;margin-top:14px;border:1px solid #f0cda5}
+    .muted{color:var(--muted);font-size:.92em}
+    .ads{margin:24px 0;display:block;text-align:center}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .col-12{grid-column:span 12}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+    @media(max-width:900px){.col-6{grid-column:span 12}.col-4{grid-column:span 12}}
+    table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid #f2eee8;text-align:left;font-size:14px}
+    th{background:#f7f3ed;color:#444}
+    .tag{display:inline-block;background:var(--orange);color:#333;padding:2px 8px;border-radius:999px;font-size:.82em;margin-right:6px}
+    .pill{display:inline-block;background:#e8f5e9;color:#2b5b2f;padding:2px 8px;border-radius:999px;font-size:.82em;margin-right:6px}
+    footer{text-align:center;padding:30px 20px;font-size:.9em;color:var(--muted);border-top:1px solid var(--line);margin-top:40px}
+  </style>
+</head>
+<body>
+  <div id="gt-nav"></div>
+  <script src="/assets/nav-loader.js"></script>
+
+  <header>
+    <h1>💡 고수익 키워드 생성기</h1>
+    <p>씨앗 키워드 → 의도별 롱테일 키워드 · 제목 · 메타까지 한 번에</p>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="col-12">
+        <div class="card">
+          <div class="row">
+            <label for="seed">씨앗 키워드</label>
+          </div>
+          <div class="row">
+            <input id="seed" type="text" placeholder="예) 무선 청소기 / 유산균 / 여행 가방" />
+            <select id="market">
+              <option value="kr" selected>한국 (KR)</option>
+              <option value="us">미국 (US)</option>
+              <option value="jp">일본 (JP)</option>
+            </select>
+            <select id="count">
+              <option>20</option><option selected>40</option><option>60</option>
+            </select>
+            <button onclick="generate()">생성</button>
+          </div>
+          <p class="muted">* 이 도구는 규칙 기반 로컬 생성기입니다. 실제 검색량/난이도는 추정값으로, Search Console/광고 도구로 검증하세요.</p>
+        </div>
+      </div>
+
+      <div class="col-12 ads"></div>
+
+      <div class="col-12">
+        <div class="card">
+          <h3 style="margin:6px 0 10px">🎯 의도별 추천 키워드</h3>
+          <div id="clusters"></div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <h3 style="margin:6px 0 10px">📝 블로그용 제목 · 메타 설명 제안</h3>
+          <table id="ideasTbl">
+            <thead>
+              <tr><th style="width:38%">제목(클릭 유도형)</th><th>메타 설명 (120~155자)</th><th style="width:18%">태그</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="row" style="justify-content:flex-end;gap:10px;margin-top:10px">
+            <button onclick="copyTable('ideasTbl')">표 복사</button>
+            <button onclick="exportCSV()">CSV 다운로드</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <h3 style="margin:6px 0 10px">🔍 롱테일 키워드 목록</h3>
+          <table id="kwTbl">
+            <thead>
+              <tr><th style="width:38%">키워드</th><th style="width:18%">의도</th><th style="width:18%">난이도(추정)</th><th>비고</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="row" style="justify-content:flex-end;gap:10px;margin-top:10px">
+            <button onclick="copyTable('kwTbl')">표 복사</button>
+            <button onclick="exportCSV('kw')">CSV 다운로드</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
+  </footer>
+
+  <script>
+    const INTENTS = [
+      {key:'informational', label:'정보'},
+      {key:'commercial', label:'비교'},
+      {key:'transactional', label:'구매'},
+      {key:'howto', label:'방법'},
+      {key:'review', label:'후기'}
+    ];
+    const MODS = {
+      kr: {
+        informational: ['란','정의','장점','단점','부작용','효과','종류'],
+        commercial: ['비교','추천','가성비','순위','Top 10','브랜드별'],
+        transactional: ['최저가','쿠폰','구매처','가격','세일','공식몰'],
+        howto: ['사용법','설치 방법','세척 방법','선택 기준','세팅'],
+        review: ['실사용 후기','내돈내산','3개월 사용기','장단점 솔직 후기']
+      },
+      us: {
+        informational:['what is','benefits','types','pros and cons'],
+        commercial:['vs','best','top 10','compare','guide'],
+        transactional:['price','coupon','where to buy','deal','official'],
+        howto:['how to use','setup','cleaning','tips'],
+        review:['review','hands-on','long-term review']
+      },
+      jp: {
+        informational:['とは','効果','種類','メリット','デメリット'],
+        commercial:['比較','おすすめ','ランキング','コスパ'],
+        transactional:['最安値','クーポン','購入先','価格'],
+        howto:['使い方','設置方法','掃除方法','選び方'],
+        review:['レビュー','実機','長期使用感']
+      }
+    };
+    const DIFF = ['낮음','보통','높음'];
+    function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+    function generate(){
+      const seed = (document.getElementById('seed').value||'마크다운 변환기').trim();
+      const market = document.getElementById('market').value;
+      const N = parseInt(document.getElementById('count').value,10)||40;
+      const sets = MODS[market];
+      if(!seed){ alert('씨앗 키워드를 입력해주세요.'); return; }
+      const rowsKW=[];
+      const clusters={};
+      INTENTS.forEach(i=>clusters[i.key]=[]);
+      const intentsOrder=['informational','commercial','transactional','howto','review'];
+      for(let i=0;i<N;i++){
+        const intent = intentsOrder[i % intentsOrder.length];
+        const mod = pick(sets[intent]);
+        let phrase;
+        if(market==='kr') phrase = `${seed} ${mod}`;
+        else if(market==='us') phrase = `${mod} ${seed}`;
+        else phrase = `${seed} ${mod}`;
+        const diff = pick(DIFF);
+        const note = intent==='commercial' ? '비교/리스트형 콘텐츠 적합' : (intent==='transactional' ? '수익형(구매 의도) 강함' : '정보형');
+        rowsKW.push({kw:phrase,intent:intent,diff:diff,note:note});
+        clusters[intent].push(phrase);
+      }
+      const $clusters = document.getElementById('clusters');
+      $clusters.innerHTML = '';
+      INTENTS.forEach(({key,label})=>{
+        if(!clusters[key].length) return;
+        const box = document.createElement('div');
+        box.className='card';
+        box.innerHTML = `<div class="pill">${label}</div>` +
+          '<div style="margin-top:6px">' + clusters[key].slice(0,10).map(k=>`<span class="tag">${escapeHtml(k)}</span>`).join(' ') + '</div>';
+        $clusters.appendChild(box);
+      });
+      const kwBody = document.querySelector('#kwTbl tbody');
+      kwBody.innerHTML = rowsKW.map(r=>`<tr><td>${escapeHtml(r.kw)}</td><td>${labelIntent(r.intent)}</td><td>${r.diff}</td><td>${r.note}</td></tr>`).join('');
+      const ideaRows = buildIdeas(seed, market);
+      const ideasBody = document.querySelector('#ideasTbl tbody');
+      ideasBody.innerHTML = ideaRows.map(r=>`<tr><td>${escapeHtml(r.title)}</td><td>${escapeHtml(r.meta)}</td><td>${r.tags.map(t=>`<span class='tag'>${escapeHtml(t)}</span>`).join(' ')}</td></tr>`).join('');
+    }
+    function buildIdeas(seed, market){
+      const titles=[
+        `${seed} 가이드: 처음부터 확실히 끝내는 사용법` ,
+        `${seed} 비교 분석: 가성비 vs 고급형, 어떤 걸 살까?`,
+        `${seed} 장단점 총정리와 똑똑한 선택 기준`,
+        `${seed} 실사용 후기: 2주 사용하고 알게 된 핵심 팁 7가지`,
+        `${seed} 구매 체크리스트 & 실수 방지 포인트`
+      ];
+      return titles.map(t=>({
+        title:t,
+        meta:`${seed} 관련 핵심 정보를 한눈에 정리했습니다. 실제 사용 팁과 비교 포인트, 구매 전 확인해야 할 체크리스트를 담아 초보자도 쉽게 선택할 수 있도록 도와드립니다.`.slice(0,155),
+        tags:[seed,'비교','가성비','추천','후기']
+      }));
+    }
+    function labelIntent(key){ return INTENTS.find(i=>i.key===key)?.label||key; }
+    function escapeHtml(s){ return s.replace(/[&<>\"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+    function tableToCSV(tblId){
+      const rows = Array.from(document.querySelectorAll(`#${tblId} tr`));
+      return rows.map(tr=>Array.from(tr.children).map(td=>`"${td.innerText.replace(/\"/g,'\"\"')}"`).join(',')).join('\n');
+    }
+    function exportCSV(which){
+      const id = which==='kw' ? 'kwTbl' : 'ideasTbl';
+      const csv = tableToCSV(id);
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (which==='kw'?'keywords':'ideas') + '_' + Date.now() + '.csv';
+      a.click();
+    }
+    function copyTable(id){
+      const html = document.getElementById(id).outerHTML;
+      navigator.clipboard.writeText(html).then(()=>alert('표 HTML이 복사되었습니다. 블로그 HTML 모드/변환기로 붙여넣으세요.'));
+    }
+  </script>
+</body>
+</html>

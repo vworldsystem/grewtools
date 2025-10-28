@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown → HTML 변환기 | GrewTools</title>
+  <meta name="description" content="마크다운 문법을 HTML로 변환하는 무료 도구. 티스토리, 네이버 블로그, 구글 블로그용 HTML 코드 생성기.">
+  <link rel="icon" href="/assets/favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="canonical" href="https://grewtools.com/markdown" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="GrewTools" />
+  <meta property="og:title" content="Markdown → HTML 변환기 | GrewTools" />
+  <meta property="og:description" content="마크다운 문서를 HTML 코드로 변환해 블로그에 즉시 사용하세요." />
+  <meta property="og:url" content="https://grewtools.com/markdown" />
+  <meta property="og:image" content="https://grewtools.com/assets/og-markdown.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    body { font-family: 'Noto Sans KR', Pretendard, sans-serif; background-color: #faf7f2; color: #333; margin: 0; }
+    header { text-align: center; background: linear-gradient(135deg, #6fbf73, #ffd9b3); color: white; padding: 30px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    header h1 { margin: 0; font-size: 1.8em; }
+    .container { max-width: 900px; margin: 40px auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    textarea { width: 100%; height: 250px; border-radius: 10px; border: 1px solid #ccc; padding: 15px; font-size: 14px; font-family: monospace; resize: vertical; }
+    button { background-color: #6fbf73; color: white; border: none; border-radius: 20px; padding: 10px 20px; margin-top: 10px; cursor: pointer; transition: 0.3s; }
+    button:hover { background-color: #5aa261; }
+    .result { margin-top: 30px; background: #fffdf9; padding: 20px; border-radius: 15px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+    .copy-btn { margin-top: 10px; background-color: #ffd9b3; color: #333; }
+    .copy-btn:hover { background-color: #ffc68a; }
+    footer { text-align: center; padding: 30px 20px; font-size: 0.9em; color: #777; border-top: 1px solid #e0ddd8; margin-top: 50px; }
+  </style>
+</head>
+<body>
+  <div id="gt-nav"></div>
+  <script src="/assets/nav-loader.js"></script>
+
+  <header>
+    <h1>📝 Markdown → HTML 변환기</h1>
+    <p>AI 블로거를 위한 마크다운 → HTML 변환 도구</p>
+  </header>
+
+  <div class="container">
+    <h2>1️⃣ 마크다운을 입력하세요</h2>
+    <textarea id="markdown" placeholder="# 여기에 마크다운을 입력하세요"></textarea>
+    <button onclick="convertMarkdown()">HTML로 변환하기</button>
+
+    <div class="result" id="result"></div>
+    <button class="copy-btn" onclick="copyHTML()">HTML 복사하기</button>
+  </div>
+
+  <footer>
+    <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
+  </footer>
+
+  <script>
+    function convertMarkdown() {
+      const input = document.getElementById('markdown').value;
+      const html = marked.parse(input);
+      document.getElementById('result').innerHTML = html;
+    }
+    function copyHTML() {
+      const html = document.getElementById('result').innerHTML;
+      navigator.clipboard.writeText(html);
+      alert('HTML 코드가 복사되었습니다!');
+    }
+  </script>
+</body>
+</html>

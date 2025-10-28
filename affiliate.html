@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>쿠팡 링크 변환기 | GrewTools</title>
+  <meta name="description" content="쿠팡 상품 URL을 자동으로 파트너스 링크로 변환하는 무료 도구. 광고주 토큰 입력, 자동 추적 파라미터 추가, 블로그 HTML 코드 복사 지원." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="canonical" href="https://grewtools.com/affiliate" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="GrewTools" />
+  <meta property="og:title" content="쿠팡 링크 변환기 | GrewTools" />
+  <meta property="og:description" content="쿠팡 상품 URL을 자동으로 파트너스 링크로 변환하고 블로그 HTML 코드를 생성합니다." />
+  <meta property="og:url" content="https://grewtools.com/affiliate" />
+  <meta property="og:image" content="https://grewtools.com/assets/og-affiliate.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root { --bg: #faf7f2; --green: #6fbf73; --orange: #ffd9b3; --ink: #333; --muted: #777; --card: #ffffff; }
+    body { font-family: 'Noto Sans KR', Pretendard, sans-serif; background: var(--bg); color: var(--ink); margin: 0; }
+    header { padding: 30px 20px; text-align: center; color: #fff; background: linear-gradient(135deg, var(--green), var(--orange)); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    header h1 { margin: 0; font-size: 1.8em; }
+    .wrap { max-width: 900px; margin: 40px auto; background: var(--card); border-radius: 20px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; }
+    input[type=text] { flex: 1; min-width: 250px; border: 1px solid #d9d4cd; border-radius: 12px; padding: 12px 14px; font-size: 15px; }
+    button { background: var(--green); color: #fff; border: none; border-radius: 20px; padding: 12px 18px; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #5aa261; }
+    .result { margin-top: 30px; background: #fffdf9; padding: 20px; border-radius: 15px; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+    .copy-btn { margin-top: 10px; background: var(--orange); color: #333; }
+    .copy-btn:hover { background: #ffc68a; }
+    footer { text-align: center; padding: 30px 20px; font-size: 0.9em; color: var(--muted); border-top: 1px solid #e0ddd8; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <div id="gt-nav"></div>
+  <script src="/assets/nav-loader.js"></script>
+
+  <header>
+    <h1>🛍️ 쿠팡 링크 변환기</h1>
+    <p>상품 URL을 자동으로 파트너스 링크로 변환하세요</p>
+  </header>
+
+  <div class="wrap">
+    <h2>1️⃣ 파트너스 토큰 입력</h2>
+    <div class="row">
+      <input id="token" type="text" placeholder="예) affiliate_id=1234567" />
+    </div>
+
+    <h2>2️⃣ 상품 URL 붙여넣기</h2>
+    <div class="row">
+      <input id="productUrl" type="text" placeholder="예) https://www.coupang.com/vp/products/123456789" />
+      <button onclick="convertAffiliate()">변환하기</button>
+    </div>
+
+    <div id="result" class="result" style="display:none;">
+      <h3>✅ 변환된 링크</h3>
+      <input id="convertedUrl" type="text" readonly style="width:100%; padding:10px; border-radius:10px; border:1px solid #ccc;" />
+      <button class="copy-btn" onclick="copyLink()">링크 복사하기</button>
+
+      <h3 style="margin-top:20px;">🧾 블로그용 HTML 코드</h3>
+      <textarea id="htmlCode" readonly style="width:100%; height:100px; border-radius:10px; border:1px solid #ccc; padding:10px; font-family:monospace;"></textarea>
+      <button class="copy-btn" onclick="copyHTML()">HTML 복사하기</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
+  </footer>
+
+  <script>
+    function convertAffiliate() {
+      const token = document.getElementById('token').value.trim();
+      const url = document.getElementById('productUrl').value.trim();
+      if (!token || !url) { alert('토큰과 상품 URL을 모두 입력해주세요.'); return; }
+      const base = 'https://link.coupang.com/refer';
+      const encodedUrl = encodeURIComponent(url);
+      const affiliateUrl = `${base}?${token}&target=${encodedUrl}`;
+      document.getElementById('convertedUrl').value = affiliateUrl;
+      document.getElementById('htmlCode').value = `<a href="${affiliateUrl}" target="_blank">👉 쿠팡에서 상품 보기</a>`;
+      document.getElementById('result').style.display = 'block';
+    }
+    function copyLink() {
+      const link = document.getElementById('convertedUrl').value;
+      navigator.clipboard.writeText(link);
+      alert('링크가 복사되었습니다!');
+    }
+    function copyHTML() {
+      const html = document.getElementById('htmlCode').value;
+      navigator.clipboard.writeText(html);
+      alert('HTML 코드가 복사되었습니다! 블로그 본문에 붙여넣어 사용하세요.');
+    }
+  </script>
+</body>
+</html>
