@@ -1,0 +1,37 @@
+/* ===== GrewTools 공통 반응형 보정 ===== */
+
+/* 네비게이션: 모바일 줄바꿈/세로깨짐 방지 */
+#gt-nav .nav a { white-space: nowrap; }
+#gt-nav .nav { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+#gt-nav .nav::-webkit-scrollbar { height: 6px; }
+#gt-nav .nav::-webkit-scrollbar-thumb { background: #e5e2dc; border-radius: 999px; }
+
+/* 모바일 햄버거 메뉴 레이아웃 */
+@media (max-width: 768px) {
+  #gt-nav .nav { gap: 8px; padding: 10px 12px; }
+  #gt-nav .brand { font-size: 16px; }
+  #gt-nav .links { display: none; width: 100%; }
+  #gt-nav .links.open { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  #gt-nav .toggle { display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid #e0ddd8; border-radius: 10px; padding: 6px 10px; background: #fff; }
+}
+
+/* 카드/그리드: 더 조밀하게 */
+@media (max-width: 768px) {
+  .tools { grid-template-columns: 1fr; padding: 20px 14px; gap: 14px; }
+  header h1 { font-size: 1.6em !important; line-height: 1.25; }
+  header p  { font-size: .98em !important; }
+  .tool-card { padding: 18px; border-radius: 16px; }
+}
+
+/* 섹션 컨테이너 공통 여백 축소 */
+@media (max-width: 480px) {
+  .container, .wrap { margin: 20px auto !important; padding: 18px !important; border-radius: 14px !important; }
+  textarea, input[type="text"], input[type="url"], select { font-size: 15px !important; }
+}
+
+/* 표/테이블 좌우 스크롤 허용 */
+table { display: block; width: 100%; overflow-x: auto; }
+
+/* 버튼 터치 타겟 확대 */
+button { min-height: 40px; }

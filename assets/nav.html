@@ -4,19 +4,30 @@
   .topbar{position:sticky;top:0;z-index:10;backdrop-filter:blur(6px);background:rgba(255,255,255,.6);border-bottom:1px solid var(--line)}
   .nav{max-width:1200px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
   .brand{font-weight:700;color:#2e6e33;text-decoration:none}
-  .spacer{flex:1}
-  .nav a{color:#2b2b2b;text-decoration:none;padding:8px 10px;border-radius:12px}
+  .nav a{color:#2b2b2b;text-decoration:none;padding:8px 10px;border-radius:12px;white-space:nowrap}
   .nav a:hover{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  .spacer{flex:1}
+  .toggle{display:none;cursor:pointer}
 </style>
+
+<link rel="stylesheet" href="/assets/responsive.css">
+
 <div class="topbar">
   <nav class="nav">
     <a class="brand" href="/">GrewTools</a>
-    <a href="/markdown">Markdown 변환기</a>
-    <a href="/shortlink">짧은 주소</a>
-    <a href="/keyword">키워드</a>
-    <a href="/affiliate">쿠팡 링크</a>
-    <div class="spacer"></div>
-    <a href="/blog">블로그</a>
-    <a href="/policy">정책</a>
+
+    <!-- 모바일: 햄버거 -->
+    <button class="toggle" aria-label="메뉴 열기" onclick="document.querySelector('#gt-nav .links').classList.toggle('open')">☰ 메뉴</button>
+
+    <!-- 링크 모음 -->
+    <div class="links" style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="/markdown">Markdown 변환기</a>
+      <a href="/shortlink">짧은 주소</a>
+      <a href="/keyword">키워드</a>
+      <a href="/affiliate">쿠팡 링크</a>
+      <span class="spacer"></span>
+      <a href="/blog">블로그</a>
+      <a href="/policy">정책</a>
+    </div>
   </nav>
 </div>
