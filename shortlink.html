@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>짧은 주소 생성기 | GrewTools</title>
-  <meta name="description" content="긴 URL을 짧게! 클립보드 복사, 로컬 리다이렉트(미리보기용) 지원. Firebase/Supabase 연동 전 가벼운 MVP." />
+
+  <meta name="description" content="긴 URL을 짧게! 클립보드 복사, 로컬 리다이렉트 지원. Firebase/Supabase 연동 전 MVP." />
+
   <link rel="icon" href="/assets/favicon.ico" />
   <link rel="stylesheet" href="/assets/responsive.css">
+
   <link rel="canonical" href="https://grewtools.com/shortlink" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="GrewTools" />
@@ -15,9 +18,18 @@
   <meta property="og:url" content="https://grewtools.com/shortlink" />
   <meta property="og:image" content="https://grewtools.com/assets/og-shortlink.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- 페이지 스타일 -->
   <style>
+    /* header가 nav 패널을 덮지 않도록 z-index 낮춤 */
+    header { position: relative; z-index: 1; overflow: visible !important; }
+
     body{font-family:'Noto Sans KR',Pretendard,sans-serif;background:#faf7f2;color:#333;margin:0}
-    header{padding:30px 20px;text-align:center;color:#fff;background:linear-gradient(135deg,#6fbf73,#ffd9b3);border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+    header{padding:30px 20px;text-align:center;color:#fff;
+      background:linear-gradient(135deg,#6fbf73,#ffd9b3);
+      border-bottom-left-radius:30px;border-bottom-right-radius:30px;
+      box-shadow:0 4px 10px rgba(0,0,0,.1)
+    }
     header h1{margin:0;font-size:1.8em}
     .wrap{max-width:900px;margin:40px auto;background:#fff;border-radius:20px;padding:24px 24px 30px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
     .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -35,7 +47,10 @@
     .code{font-family:ui-monospace,Consolas,monospace;background:#f3efe9;padding:2px 6px;border-radius:6px}
   </style>
 </head>
+
 <body>
+
+  <!-- 공통 NAV -->
   <div id="gt-nav"></div>
   <script src="/assets/nav-loader.js" defer></script>
   <script src="/assets/nav.js" defer></script>
@@ -46,16 +61,16 @@
   </header>
 
   <div class="wrap" id="app">
+
     <h2 style="margin-top:0">1️⃣ 긴 URL 붙여넣기</h2>
     <div class="row">
       <input id="longUrl" type="url" placeholder="https:// 예) https://example.com/very/long/path?param=1" />
       <button onclick="shorten()">단축하기</button>
     </div>
-    <p class="muted">* 테스트용 로컬 단축: 이 페이지가 생성한 코드 매핑은 현재 PC/브라우저의 <span class="code">localStorage</span>에만 저장됩니다. (글로벌 공유는 Firebase 연동 버전에서 지원)</p>
 
-    <div class="ads">
-      <!-- AdSense 자리 -->
-    </div>
+    <p class="muted">* 테스트용 로컬 단축은 <span class="code">localStorage</span>에 저장됩니다.</p>
+
+    <div class="ads"></div>
 
     <div class="card" id="out" style="display:none">
       <div class="result">
@@ -63,21 +78,20 @@
         <input id="shortUrl" type="text" readonly />
         <button onclick="copyShort()">복사</button>
       </div>
-      <div class="tip">짧은 주소를 열면 잠깐의 전환 화면 후 원본으로 이동하도록 설정할 수 있어요. (광고 슬롯 배치 가능)</div>
+      <div class="tip">짧은 주소를 열면 전환 페이지 후 원본으로 이동하도록 설정할 수 있어요.</div>
     </div>
 
-    <h2>2️⃣ 미리보기용 리다이렉트(옵션)</h2>
-    <p class="muted">공유 전 미리보기하려면, 아래 "리다이렉트 테스트" 버튼으로 이동하여 확인해보세요.</p>
+    <h2>2️⃣ 리다이렉트 미리보기</h2>
     <div class="row">
       <button onclick="openRedirectPreview()">리다이렉트 테스트 열기</button>
-      <div class="inline muted">• 현재 브라우저 저장형 | 코드: <span id="lastCode" class="code">-</span></div>
+      <div class="inline muted">• 코드: <span id="lastCode" class="code">-</span></div>
     </div>
 
-    <h3 style="margin-top:28px">⚙️ 이후 확장</h3>
+    <h3 style="margin-top:28px">⚙️ 확장 기능</h3>
     <ul>
-      <li>Firebase/Supabase에 <strong>글로벌 매핑</strong> 저장 → 어디서나 작동하는 진짜 단축 URL</li>
-      <li><strong>/go?c=CODE</strong> 전환 페이지에서 2~3초 안내 + 광고 슬롯 표기 후 원본으로 이동</li>
-      <li>클릭 통계(CTR, referrer, 국가) 대시보드</li>
+      <li>Firebase/Supabase 글로벌 매핑</li>
+      <li>/go 전환 페이지 → CTA/광고</li>
+      <li>CTR/국가 통계</li>
     </ul>
   </div>
 
@@ -85,66 +99,67 @@
     <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
   </footer>
 
+  <!-- 기능 JS -->
   <script>
     function genCode(len=5){
       const s='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let out='';
-      for(let i=0;i<len;i++) out+=s[Math.floor(Math.random()*s.length)];
+      let out=''; for(let i=0;i<len;i++) out+=s[Math.floor(Math.random()*s.length)];
       return out;
     }
     function normalizeUrl(u){
       try{
-        if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
-        const url = new URL(u);
-        return url.toString();
+        if(!/^https?:\/\//i.test(u)) u='https://'+u;
+        return new URL(u).toString();
       }catch(e){ return null; }
     }
     function shorten(){
-      const raw = document.getElementById('longUrl').value.trim();
-      const norm = normalizeUrl(raw);
-      if(!norm){ alert('올바른 URL을 입력해주세요. (예: https://example.com)'); return; }
-      const code = genCode();
-      const map = JSON.parse(localStorage.getItem('gt_shortmap')||'{}');
-      map[code] = { url:norm, t:Date.now() };
-      localStorage.setItem('gt_shortmap', JSON.stringify(map));
-      const short = `${location.origin}${location.pathname}?c=${code}&mode=go`;
-      document.getElementById('shortUrl').value = short;
-      document.getElementById('lastCode').textContent = code;
+      const raw=document.getElementById('longUrl').value.trim();
+      const norm=normalizeUrl(raw);
+      if(!norm) return alert('올바른 URL을 입력해주세요.');
+
+      const code=genCode();
+      const map=JSON.parse(localStorage.getItem('gt_shortmap')||'{}');
+      map[code]={url:norm,t:Date.now()};
+      localStorage.setItem('gt_shortmap',JSON.stringify(map));
+
+      const short=`${location.origin}${location.pathname}?c=${code}&mode=go`;
+      document.getElementById('shortUrl').value=short;
+      document.getElementById('lastCode').textContent=code;
       document.getElementById('out').style.display='block';
     }
     function copyShort(){
-      const v = document.getElementById('shortUrl').value;
-      navigator.clipboard.writeText(v).then(()=>alert('짧은 주소가 복사되었습니다!'));
+      navigator.clipboard.writeText(document.getElementById('shortUrl').value)
+        .then(()=>alert('짧은 주소가 복사되었습니다!'));
     }
     function openRedirectPreview(){
-      const code = document.getElementById('lastCode').textContent;
-      if(code==='-'){ alert('먼저 단축 주소를 생성해주세요.'); return; }
-      const url = `${location.pathname}?c=${code}&mode=go`;
-      window.open(url, '_blank');
+      const code=document.getElementById('lastCode').textContent;
+      if(code==='-') return alert('먼저 단축 주소를 생성해주세요.');
+      window.open(`${location.pathname}?c=${code}&mode=go`,'_blank');
     }
     (function handleRedirect(){
       const p=new URLSearchParams(location.search);
       if(p.get('mode')==='go' && p.get('c')){
-        const code = p.get('c');
-        const map = JSON.parse(localStorage.getItem('gt_shortmap')||'{}');
-        const hit = map[code];
-        document.body.innerHTML = `
+        const code=p.get('c');
+        const map=JSON.parse(localStorage.getItem('gt_shortmap')||'{}');
+        const hit=map[code];
+
+        document.body.innerHTML=`
           <div style="max-width:720px;margin:12vh auto;background:#fff;border-radius:18px;padding:28px;box-shadow:0 4px 16px rgba(0,0,0,.08);text-align:center">
-            <h2 style="margin-top:0;color:#6fbf73">잠시만요, 안전하게 이동 중…</h2>
-            <p style="color:#555">코드 <span style="font-family:ui-monospace">${code}</span> → 원본 링크로 연결합니다.</p>
+            <h2 style="margin-top:0;color:#6fbf73">잠시만요, 이동 중…</h2>
+            <p style="color:#555">코드 <b>${code}</b> → 원본 링크로 연결합니다.</p>
             <div class="ads" style="margin:24px auto"></div>
-            <p class="muted">3초 후 자동 이동합니다. 문제가 있으면 아래 버튼을 눌러주세요.</p>
+            <p class="muted">3초 후 자동 이동합니다.</p>
             <div class="row" style="justify-content:center;margin-top:12px">
-              <button id="goNow">지금 바로 이동</button>
+              <button id="goNow">지금 이동</button>
             </div>
-            <footer style="margin-top:18px;color:#777;font-size:.9em">© 2025 GrewTools • 본 페이지에는 제휴 링크가 포함됩니다.</footer>
           </div>`;
-        const target = hit?.url;
-        const go = ()=>{ if(target) location.replace(target); else alert('매핑 정보를 찾지 못했습니다. (이 브라우저에서 생성한 코드인지 확인)'); };
-        document.getElementById('goNow').onclick = go;
-        setTimeout(go, 3000);
+        const target=hit?.url;
+        const go=()=>{ if(target) location.replace(target); };
+        document.getElementById('goNow').onclick=go;
+        setTimeout(go,3000);
       }
     })();
   </script>
+
 </body>
 </html>

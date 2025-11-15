@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>고수익 키워드 생성기 | GrewTools</title>
+
   <meta name="description" content="씨앗 키워드로 고수익 롱테일 키워드를 자동 생성하고 의도별로 묶어주는 무료 도구. 블로그/애드센스/제휴에 최적화." />
+
   <link rel="icon" href="/assets/favicon.ico" />
   <link rel="stylesheet" href="/assets/responsive.css">
+
   <link rel="canonical" href="https://grewtools.com/keyword" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="GrewTools" />
@@ -15,44 +18,124 @@
   <meta property="og:url" content="https://grewtools.com/keyword" />
   <meta property="og:image" content="https://grewtools.com/assets/og-keyword.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- 페이지 스타일 -->
   <style>
     :root{
       --bg:#faf7f2; --green:#6fbf73; --orange:#ffd9b3; --ink:#333; --muted:#777;
       --card:#ffffff; --soft:#fffdf9; --line:#e0ddd8;
     }
     *{box-sizing:border-box}
-    body{font-family:'Noto Sans KR',Pretendard,sans-serif;background:var(--bg);color:var(--ink);margin:0}
-    header{padding:30px 20px;text-align:center;color:#fff;background:linear-gradient(135deg,var(--green),var(--orange));border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+
+    body{
+      font-family:'Noto Sans KR',Pretendard,sans-serif;
+      background:var(--bg); color:var(--ink); margin:0
+    }
+
+    /* header가 nav 패널을 덮지 않도록 수정 */
+    header{
+      position: relative;
+      z-index: 1;
+      overflow: visible !important;
+
+      padding:30px 20px;
+      text-align:center;
+      color:#fff;
+      background:linear-gradient(135deg,var(--green),var(--orange));
+      border-bottom-left-radius:30px;
+      border-bottom-right-radius:30px;
+      box-shadow:0 4px 10px rgba(0,0,0,.1)
+    }
     header h1{margin:0;font-size:1.8em}
-    .wrap{max-width:1100px;margin:40px auto;background:var(--card);border-radius:20px;padding:24px 24px 30px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+
+    .wrap{
+      max-width:1100px; margin:40px auto;
+      background:var(--card);
+      border-radius:20px;
+      padding:24px 24px 30px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08)
+    }
+
     .row{display:flex;gap:10px;flex-wrap:wrap}
     label{font-size:.95em;color:#444}
-    input[type=text],select,textarea{border:1px solid #d9d4cd;border-radius:12px;padding:12px 14px;font-size:15px}
+    input[type=text],select,textarea{
+      border:1px solid #d9d4cd;
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:15px
+    }
     input[type=text]{flex:1;min-width:220px}
     select{height:44px}
     textarea{width:100%;min-height:120px;resize:vertical}
-    button{background:var(--green);color:#fff;border:none;border-radius:20px;padding:12px 18px;font-size:15px;cursor:pointer;transition:.2s}
+
+    button{
+      background:var(--green); color:#fff;
+      border:none; border-radius:20px;
+      padding:12px 18px;
+      font-size:15px; cursor:pointer;
+      transition:.2s
+    }
     button:hover{background:#5aa261}
-    .card{background:var(--soft);border-radius:16px;padding:16px 16px;margin-top:14px;border:1px solid #f0cda5}
+
+    .card{
+      background:var(--soft);
+      border-radius:16px;
+      padding:16px;
+      margin-top:14px;
+      border:1px solid #f0cda5
+    }
+
     .muted{color:var(--muted);font-size:.92em}
     .ads{margin:24px 0;display:block;text-align:center}
+
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
     .col-12{grid-column:span 12}
     .col-6{grid-column:span 6}
     .col-4{grid-column:span 4}
-    @media(max-width:900px){.col-6{grid-column:span 12}.col-4{grid-column:span 12}}
-    table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
-    th,td{padding:10px 12px;border-bottom:1px solid #f2eee8;text-align:left;font-size:14px}
+    @media(max-width:900px){
+      .col-6,.col-4{grid-column:span 12}
+    }
+
+    table{
+      width:100%; border-collapse:collapse;
+      background:#fff;
+      border-radius:14px; overflow:hidden
+    }
+    th,td{
+      padding:10px 12px;
+      border-bottom:1px solid #f2eee8;
+      text-align:left; font-size:14px
+    }
     th{background:#f7f3ed;color:#444}
-    .tag{display:inline-block;background:var(--orange);color:#333;padding:2px 8px;border-radius:999px;font-size:.82em;margin-right:6px}
-    .pill{display:inline-block;background:#e8f5e9;color:#2b5b2f;padding:2px 8px;border-radius:999px;font-size:.82em;margin-right:6px}
-    footer{text-align:center;padding:30px 20px;font-size:.9em;color:var(--muted);border-top:1px solid var(--line);margin-top:40px}
+
+    .tag{
+      display:inline-block;
+      background:var(--orange); color:#333;
+      padding:2px 8px;
+      border-radius:999px; font-size:.82em; margin-right:6px
+    }
+    .pill{
+      display:inline-block;
+      background:#e8f5e9; color:#2b5b2f;
+      padding:2px 8px; border-radius:999px;
+      font-size:.82em; margin-right:6px
+    }
+
+    footer{
+      text-align:center; padding:30px 20px;
+      font-size:.9em; color:var(--muted);
+      border-top:1px solid var(--line);
+      margin-top:40px
+    }
   </style>
 </head>
+
 <body>
+
+  <!-- NAV -->
   <div id="gt-nav"></div>
   <script src="/assets/nav-loader.js" defer></script>
-<script src="/assets/nav.js" defer></script>
+  <script src="/assets/nav.js" defer></script>
 
   <header>
     <h1>💡 고수익 키워드 생성기</h1>

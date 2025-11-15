@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Markdown → HTML 변환기 | GrewTools</title>
   <meta name="description" content="마크다운 문법을 HTML로 변환하는 무료 도구. 티스토리, 네이버 블로그, 구글 블로그용 HTML 코드 생성기.">
+
+  <!-- 공통 스타일 (반드시 head 안에서 가장 먼저 로드) -->
   <link rel="stylesheet" href="/assets/responsive.css">
+
   <link rel="icon" href="/assets/favicon.ico">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- SEO & OG -->
   <link rel="canonical" href="https://grewtools.com/markdown" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="GrewTools" />
@@ -16,6 +22,8 @@
   <meta property="og:url" content="https://grewtools.com/markdown" />
   <meta property="og:image" content="https://grewtools.com/assets/og-markdown.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- 페이지 전용 스타일 -->
   <style>
     body { font-family: 'Noto Sans KR', Pretendard, sans-serif; background-color: #faf7f2; color: #333; margin: 0; }
     header { text-align: center; background: linear-gradient(135deg, #6fbf73, #ffd9b3); color: white; padding: 30px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -30,10 +38,15 @@
     footer { text-align: center; padding: 30px 20px; font-size: 0.9em; color: #777; border-top: 1px solid #e0ddd8; margin-top: 50px; }
   </style>
 </head>
+
 <body>
+
+  <!-- 네비게이션 삽입 위치 -->
   <div id="gt-nav"></div>
+
+  <!-- NAV: loader 먼저, nav.js 나중 (필수 순서) -->
   <script src="/assets/nav-loader.js" defer></script>
-<script src="/assets/nav.js" defer></script>
+  <script src="/assets/nav.js" defer></script>
 
   <header>
     <h1>📝 Markdown → HTML 변환기</h1>
@@ -65,5 +78,6 @@
       alert('HTML 코드가 복사되었습니다!');
     }
   </script>
+
 </body>
 </html>

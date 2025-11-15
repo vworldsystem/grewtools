@@ -18,7 +18,22 @@
   <style>
     :root { --bg: #faf7f2; --green: #6fbf73; --orange: #ffd9b3; --ink: #333; --muted: #777; --card: #ffffff; }
     body { font-family: 'Noto Sans KR', Pretendard, sans-serif; background: var(--bg); color: var(--ink); margin: 0; }
-    header { padding: 30px 20px; text-align: center; color: #fff; background: linear-gradient(135deg, var(--green), var(--orange)); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+    /* nav 패널과 충돌 방지 */
+header {
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+
+  padding: 30px 20px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green), var(--orange));
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
     header h1 { margin: 0; font-size: 1.8em; }
     .wrap { max-width: 900px; margin: 40px auto; background: var(--card); border-radius: 20px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .row { display: flex; flex-wrap: wrap; gap: 10px; }
