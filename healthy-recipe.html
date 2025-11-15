@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>블로그 초보자용 건강 레시피 키워드 분석표</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .tips {
+            background: #f8f9ff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .tip-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e7ff;
+        }
+        
+        .tip-item strong {
+            color: #764ba2;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f8f9ff;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        select {
+            padding: 10px 15px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e7ff;
+            font-size: 14px;
+        }
+        
+        tbody tr {
+            transition: all 0.2s;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.01);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .badge-beginner {
+            background: #10b981;
+            color: white;
+        }
+        
+        .badge-high {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .badge-medium {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .badge-low {
+            background: #10b981;
+            color: white;
+        }
+        
+        .priority {
+            font-size: 24px;
+        }
+        
+        .rank {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 블로그 초보자용 건강 레시피 황금키워드 50개</h1>
+            <p>검색량, 경쟁도, 난이도를 분석한 초보자 맞춤 키워드</p>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 초보자를 위한 키워드 선택 가이드</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <strong>⭐ 추천 우선순위</strong>
+                    초보자 추천 키워드부터 시작하세요! 경쟁이 낮고 작성하기 쉬운 주제입니다.
+                </div>
+                <div class="tip-item">
+                    <strong>📊 난이도 확인</strong>
+                    '하' 난이도 키워드로 시작해서 점차 '중', '상'으로 확장하세요.
+                </div>
+                <div class="tip-item">
+                    <strong>🎨 콘텐츠 작성 팁</strong>
+                    사진 3장 이상 + 1000자 이상 + 실제 경험 담기
+                </div>
+                <div class="tip-item">
+                    <strong>📈 성장 전략</strong>
+                    한 달에 10-15개 포스팅, 3개월 후 결과 확인
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="downloadCSV()">
+                📥 CSV 다운로드
+            </button>
+            <button class="btn btn-success" onclick="copyTable()">
+                📋 표 복사하기
+            </button>
+            
+            <div class="filter-group">
+                <label>난이도:</label>
+                <select id="difficultyFilter" onchange="filterTable()">
+                    <option value="all">전체</option>
+                    <option value="하">하 (초보자용)</option>
+                    <option value="중">중</option>
+                    <option value="상">상</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>추천도:</label>
+                <select id="recommendFilter" onchange="filterTable()">
+                    <option value="all">전체</option>
+                    <option value="초보자 추천">초보자 추천만</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="keywordTable">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>키워드</th>
+                        <th>카테고리</th>
+                        <th>월간 검색량</th>
+                        <th>경쟁도</th>
+                        <th>난이도</th>
+                        <th>수익성</th>
+                        <th>초보자 추천</th>
+                        <th>특징</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const keywords = [
+            {rank: 1, keyword: "두부 요리", category: "단백질", search: "3,000", competition: "낮음", difficulty: "하", profit: "중간", beginner: "⭐⭐⭐", feature: "재료 저렴, 조리 간단, 사진 예쁨"},
+            {rank: 2, keyword: "고구마 레시피", category: "탄수화물", search: "4,500", competition: "낮음", difficulty: "하", profit: "중간", beginner: "⭐⭐⭐", feature: "대중적, 간식 대용, 사계절"},
+            {rank: 3, keyword: "오트밀 레시피", category: "곡물", search: "3,800", competition: "중간", difficulty: "하", profit: "중간", beginner: "⭐⭐⭐", feature: "아침 식사, SNS 인기, 바리에이션 많음"},
+            {rank: 4, keyword: "브로콜리 요리", category: "채소", search: "2,200", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐⭐", feature: "슈퍼푸드, 조리 쉬움"},
+            {rank: 5, keyword: "병아리콩 레시피", category: "콩류", search: "1,800", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐⭐⭐", feature: "블루오션, 비건 친화"},
+            {rank: 6, keyword: "방울토마토 요리", category: "채소", search: "2,500", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐⭐", feature: "간단, 색감 예쁨"},
+            {rank: 7, keyword: "현미밥 레시피", category: "곡물", search: "2,800", competition: "낮음", difficulty: "하", profit: "중간", beginner: "⭐⭐", feature: "건강식 기본"},
+            {rank: 8, keyword: "샐러드 레시피", category: "채소", search: "6,500", competition: "높음", difficulty: "하", profit: "중간", beginner: "⭐⭐", feature: "검색량 많음, 경쟁 높음"},
+            {rank: 9, keyword: "시금치 요리", category: "채소", search: "2,100", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐⭐", feature: "철분 보충, 국/무침 다양"},
+            {rank: 10, keyword: "콩나물 요리", category: "채소", search: "2,400", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐⭐", feature: "저렴, 저칼로리"},
+            {rank: 11, keyword: "주키니 요리", category: "채소", search: "1,900", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "저칼로리, 볶음/구이"},
+            {rank: 12, keyword: "파프리카 요리", category: "채소", search: "1,600", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "비타민C, 색감 좋음"},
+            {rank: 13, keyword: "무 요리", category: "채소", search: "2,600", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "소화 촉진, 무침/조림"},
+            {rank: 14, keyword: "미역 레시피", category: "해조류", search: "1,500", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "미네랄, 산후조리"},
+            {rank: 15, keyword: "저칼로리 레시피", category: "다이어트", search: "5,200", competition: "중간", difficulty: "중", profit: "높음", beginner: "⭐", feature: "다이어트 필수"},
+            {rank: 16, keyword: "닭가슴살 요리", category: "단백질", search: "7,800", competition: "높음", difficulty: "중", profit: "높음", beginner: "⭐", feature: "헬스족, 고수요"},
+            {rank: 17, keyword: "단백질 요리", category: "영양소", search: "4,900", competition: "중간", difficulty: "중", profit: "높음", beginner: "⭐", feature: "운동인구 증가"},
+            {rank: 18, keyword: "다이어트 식단", category: "다이어트", search: "12,000", competition: "높음", difficulty: "상", profit: "높음", beginner: "", feature: "최고 검색량, 경쟁 치열"},
+            {rank: 19, keyword: "토마토 레시피", category: "채소", search: "3,100", competition: "중간", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "라이코펜, 다양한 조리법"},
+            {rank: 20, keyword: "아보카도 요리", category: "지방", search: "2,700", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "불포화지방, 프리미엄"},
+            {rank: 21, keyword: "연어 요리", category: "단백질", search: "4,200", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "오메가3, 고급 식재료"},
+            {rank: 22, keyword: "퀴노아 요리", category: "곡물", search: "1,400", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐⭐", feature: "슈퍼푸드, 밥 대용"},
+            {rank: 23, keyword: "케일 레시피", category: "채소", search: "1,200", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐⭐", feature: "슈퍼푸드, 칩/주스"},
+            {rank: 24, keyword: "그릭요거트 레시피", category: "유제품", search: "3,300", competition: "중간", difficulty: "하", profit: "높음", beginner: "⭐⭐", feature: "고단백 간식, SNS 인기"},
+            {rank: 25, keyword: "견과류 레시피", category: "지방", search: "2,000", competition: "낮음", difficulty: "하", profit: "높음", beginner: "⭐⭐", feature: "간식/토핑, 수익성 좋음"},
+            {rank: 26, keyword: "치아씨드 요리", category: "슈퍼푸드", search: "1,600", competition: "낮음", difficulty: "중", profit: "높음", beginner: "⭐⭐", feature: "푸딩/스무디, 트렌디"},
+            {rank: 27, keyword: "콜리플라워 레시피", category: "채소", search: "1,100", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐⭐", feature: "밥 대용, 저탄수"},
+            {rank: 28, keyword: "렌틸콩 요리", category: "콩류", search: "900", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐⭐", feature: "블루오션, 식물성 단백질"},
+            {rank: 29, keyword: "스무디볼 레시피", category: "음료/간식", search: "3,600", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "SNS 핫템, 비주얼"},
+            {rank: 30, keyword: "해독 주스", category: "음료", search: "2,800", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "디톡스 트렌드"},
+            {rank: 31, keyword: "저탄수 식단", category: "다이어트", search: "4,800", competition: "높음", difficulty: "상", profit: "높음", beginner: "", feature: "키토 다이어트"},
+            {rank: 32, keyword: "키토 식단", category: "다이어트", search: "5,500", competition: "높음", difficulty: "상", profit: "높음", beginner: "", feature: "저탄고지, 유행"},
+            {rank: 33, keyword: "비건 레시피", category: "채식", search: "4,100", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "환경의식, 성장 시장"},
+            {rank: 34, keyword: "글루텐프리 요리", category: "특수식", search: "1,800", competition: "낮음", difficulty: "중", profit: "높음", beginner: "⭐", feature: "알레르기 대응, 틈새"},
+            {rank: 35, keyword: "당뇨 식단", category: "질병관리", search: "2,400", competition: "낮음", difficulty: "상", profit: "높음", beginner: "", feature: "전문성 필요"},
+            {rank: 36, keyword: "저염식 레시피", category: "질병관리", search: "1,700", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐", feature: "고혈압 관리"},
+            {rank: 37, keyword: "간헐적 단식 식단", category: "다이어트", search: "3,900", competition: "중간", difficulty: "상", profit: "높음", beginner: "", feature: "유행 다이어트"},
+            {rank: 38, keyword: "저지방 요리", category: "다이어트", search: "2,300", competition: "중간", difficulty: "중", profit: "중간", beginner: "⭐", feature: "지방 제한"},
+            {rank: 39, keyword: "한끼 식사 대용", category: "간편식", search: "4,700", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "바쁜 현대인"},
+            {rank: 40, keyword: "도시락 레시피", category: "간편식", search: "3,500", competition: "중간", difficulty: "중", profit: "중간", beginner: "⭐", feature: "직장인 타겟"},
+            {rank: 41, keyword: "저녁 다이어트 식단", category: "다이어트", search: "3,200", competition: "중간", difficulty: "중", profit: "높음", beginner: "", feature: "시간대 특화"},
+            {rank: 42, keyword: "아침 단백질 식단", category: "영양소", search: "2,100", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐", feature: "운동 전후"},
+            {rank: 43, keyword: "면역력 강화 요리", category: "기능성", search: "1,900", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐", feature: "건강 관심 증가"},
+            {rank: 44, keyword: "항산화 레시피", category: "기능성", search: "1,100", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐", feature: "노화 방지"},
+            {rank: 45, keyword: "장 건강 식단", category: "기능성", search: "1,600", competition: "낮음", difficulty: "중", profit: "중간", beginner: "⭐", feature: "프로바이오틱스"},
+            {rank: 46, keyword: "빈혈 예방 요리", category: "기능성", search: "800", competition: "낮음", difficulty: "하", profit: "중간", beginner: "⭐⭐", feature: "철분 보충, 블루오션"},
+            {rank: 47, keyword: "숙면 도움 식단", category: "기능성", search: "700", competition: "낮음", difficulty: "중", profit: "낮음", beginner: "⭐", feature: "수면 문제, 틈새"},
+            {rank: 48, keyword: "피부 좋아지는 레시피", category: "뷰티", search: "2,500", competition: "낮음", difficulty: "중", profit: "높음", beginner: "⭐", feature: "뷰티 관심층"},
+            {rank: 49, keyword: "에어프라이어 건강요리", category: "조리법", search: "5,800", competition: "높음", difficulty: "중", profit: "높음", beginner: "", feature: "기기 보급 증가, 트렌드"},
+            {rank: 50, keyword: "찜기 요리", category: "조리법", search: "1,300", competition: "낮음", difficulty: "하", profit: "낮음", beginner: "⭐⭐", feature: "저지방 조리, 전통"}
+        ];
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                const competitionClass = 
+                    item.competition === '높음' ? 'badge-high' :
+                    item.competition === '중간' ? 'badge-medium' : 'badge-low';
+                
+                const beginnerBadge = item.beginner ? 
+                    `<span class="badge badge-beginner">${item.beginner}</span>` : 
+                    '<span style="color: #ccc;">-</span>';
+                
+                row.innerHTML = `
+                    <td><span class="rank">${item.rank}</span></td>
+                    <td><strong>${item.keyword}</strong></td>
+                    <td>${item.category}</td>
+                    <td>${item.search}</td>
+                    <td><span class="badge ${competitionClass}">${item.competition}</span></td>
+                    <td><span class="badge ${item.difficulty === '하' ? 'badge-low' : item.difficulty === '중' ? 'badge-medium' : 'badge-high'}">${item.difficulty}</span></td>
+                    <td>${item.profit}</td>
+                    <td>${beginnerBadge}</td>
+                    <td>${item.feature}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            const difficultyFilter = document.getElementById('difficultyFilter').value;
+            const recommendFilter = document.getElementById('recommendFilter').value;
+            
+            let filtered = keywords;
+            
+            if (difficultyFilter !== 'all') {
+                filtered = filtered.filter(item => item.difficulty === difficultyFilter);
+            }
+            
+            if (recommendFilter !== 'all') {
+                filtered = filtered.filter(item => item.beginner !== '');
+            }
+            
+            renderTable(filtered);
+        }
+
+        function downloadCSV() {
+            const headers = ['순위', '키워드', '카테고리', '월간검색량', '경쟁도', '난이도', '수익성', '초보자추천', '특징'];
+            
+            let csv = headers.join(',') + '\n';
+            
+            keywords.forEach(item => {
+                const row = [
+                    item.rank,
+                    `"${item.keyword}"`,
+                    `"${item.category}"`,
+                    `"${item.search}"`,
+                    `"${item.competition}"`,
+                    `"${item.difficulty}"`,
+                    `"${item.profit}"`,
+                    `"${item.beginner}"`,
+                    `"${item.feature}"`
+                ];
+                csv += row.join(',') + '\n';
+            });
+            
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '건강레시피_키워드_50개.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function copyTable() {
+            const table = document.getElementById('keywordTable');
+            const range = document.createRange();
+            range.selectNode(table);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            
+            try {
+                document.execCommand('copy');
+                alert('✅ 표가 복사되었습니다!\n엑셀이나 구글 시트에 붙여넣기(Ctrl+V) 하세요.');
+            } catch (err) {
+                alert('❌ 복사 실패. CSV 다운로드를 이용해주세요.');
+            }
+            
+            window.getSelection().removeAllRanges();
+        }
+
+        renderTable(keywords);
+    </script>
+</body>
+</html>
