@@ -35,3 +35,66 @@ table { display: block; width: 100%; overflow-x: auto; }
 
 /* 버튼 터치 타겟 확대 */
 button { min-height: 40px; }
+
+/* ==============================================
+   GrewTools 모바일 네비게이션 최종 개선본
+   ============================================== */
+
+/* 모바일 레이아웃: 햄버거 오른쪽 고정 */
+@media (max-width: 768px) {
+
+  /* nav 기본 구조 */
+  #gt-nav nav.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; /* 메뉴 내려가지 않도록 */
+    position: relative;
+  }
+
+  /* 로고는 왼쪽 */
+  #gt-nav .brand {
+    flex: 1 0 auto;
+  }
+
+  /* 햄버거 오른쪽 */
+  #gt-nav .toggle {
+    display: inline-flex !important;
+    z-index: 200;
+    margin-left: auto;
+  }
+
+  /* ===== 모바일 슬라이드 패널 메뉴 ===== */
+  #gt-nav .links {
+    /* 기존 레이아웃 제거 */
+    display: flex;
+    flex-direction: column;
+
+    /* 오른쪽에 숨겨진 패널 */
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 75%;
+    height: 100vh;
+    padding: 80px 20px 20px;
+    background: #ffffff;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.15);
+
+    transform: translateX(100%);
+    transition: transform .3s ease;
+
+    z-index: 150;
+  }
+
+  /* 열렸을 때 */
+  #gt-nav .links.open {
+    transform: translateX(0%);
+  }
+
+  /* 링크 스타일 */
+  #gt-nav .links a {
+    font-size: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+}
