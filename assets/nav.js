@@ -1,5 +1,5 @@
 // /assets/nav.js
-// nav-loader.js로 nav.html이 불러와진 뒤에 실행되도록 0.5초 대기
+// nav-loader.js로 nav.html이 불러와진 뒤 실행되도록 0.5초 대기
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     const navRoot = document.getElementById("gt-nav");
@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.addEventListener("click", () => {
       const isOpen = links.classList.toggle("open");
       toggle.setAttribute("aria-expanded", String(isOpen));
+
+      // 🔥 메뉴 상태를 상위 요소에 유지
+      navRoot.classList.toggle("menu-open", isOpen);
     });
 
     // 모바일에서 링크 클릭 시 자동 닫기
@@ -26,15 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
       a.addEventListener("click", () => {
         if (window.innerWidth <= 768) {
           links.classList.remove("open");
+          navRoot.classList.remove("menu-open");
           toggle.setAttribute("aria-expanded", "false");
         }
       });
     });
 
-    // 화면 크기 바뀔 때 자동 닫기
+    // 화면 크기 변경 시 메뉴 자동 닫기
     window.addEventListener("resize", () => {
       if (window.innerWidth > 768) {
         links.classList.remove("open");
+        navRoot.classList.remove("menu-open");
         toggle.setAttribute("aria-expanded", "false");
       }
     });
