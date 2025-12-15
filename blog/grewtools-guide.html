@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GrewTools 활용법 - 블로그 작업 시간 50% 단축 — GrewTools 블로그</title>
+  <meta name="description" content="HTML 미리보기, 글자수 세기, 썸네일 생성까지. GrewTools 6가지 도구로 블로그 작업 효율 극대화." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { font-size: 16px; font-weight: 700; }
+
+    .nav-links { display: flex; gap: 16px; }
+    .nav-link {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .nav-link:hover { background: rgba(255,255,255,0.2); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
+
+    .post-header { margin-bottom: 48px; }
+    .post-category {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fcd34d;
+      margin-bottom: 16px;
+    }
+    .post-title {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .post-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .post-content { font-size: 17px; color: rgba(255,255,255,0.85); }
+    .post-content h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 48px 0 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+    }
+    .post-content h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      color: #fcd34d;
+    }
+    .post-content p { margin-bottom: 24px; }
+    .post-content ul, .post-content ol { margin: 24px 0 24px 24px; }
+    .post-content li { margin-bottom: 12px; }
+    .post-content strong { color: #fbbf24; font-weight: 700; }
+
+    .tool-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .tool-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    }
+    .tool-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .tool-link {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border-radius: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tool-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+    }
+
+    .workflow-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    .workflow-box h4 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #93c5fd;
+      text-align: center;
+    }
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+    }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .post-footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    .back-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border-radius: 12px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 40px 20px; }
+      .post-title { font-size: 32px; }
+      .post-content { font-size: 16px; }
+      .tool-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">✨</div>
+      <span class="logo-text">GrewTools</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/blog.html" class="nav-link">← 블로그</a>
+      <a href="/" class="nav-link">홈</a>
+    </nav>
+  </header>
+
+  <article class="container">
+    <header class="post-header">
+      <span class="post-category">🛠️ 도구 활용</span>
+      <h1 class="post-title">GrewTools 활용법 - 블로그 작업 시간 50% 단축</h1>
+      <div class="post-meta">
+        <span>📅 2025년 1월 1일</span>
+        <span>⏱️ 6분 소요</span>
+        <span>👁️ 634회</span>
+      </div>
+    </header>
+
+    <div class="post-content">
+      <p>
+        블로그를 운영하다 보면 반복되는 작업들이 많습니다. HTML 코드 확인, 글자수 세기, 썸네일 만들기, 쿠팡 링크 변환... 이런 작업들을 <strong>자동화하면 작업 시간을 절반으로 줄일 수 있습니다</strong>. GrewTools는 바로 이런 필요에서 만들어진 무료 도구 모음입니다.
+      </p>
+
+      <h2>GrewTools란?</h2>
+
+      <p>
+        GrewTools는 <strong>블로거를 위한 올인원 도구 허브</strong>입니다. 6가지 핵심 도구를 한 곳에서 무료로 사용할 수 있으며, 별도 설치나 회원가입 없이 바로 사용 가능합니다. 모든 도구는 웹 브라우저에서 작동하므로, PC와 모바일 모두에서 사용할 수 있습니다.
+      </p>
+
+      <h2>6가지 도구 완벽 활용법</h2>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🖥️</div>
+          <div>
+            <div class="tool-title">1. HTML 코드 미리보기</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">실시간 HTML/CSS/JS 테스트</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          네이버 블로그나 워드프레스에 HTML 코드를 넣기 전에, 실제로 어떻게 보이는지 미리 확인할 수 있습니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>실시간 코드 편집 및 미리보기</li>
+          <li>6가지 템플릿 제공 (쿠팡 배너, 버튼, 표 등)</li>
+          <li>데스크톱/모바일 전환</li>
+          <li>다크/라이트 모드</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          쿠팡 파트너스 배너를 만들 때, "쿠팡 배너" 템플릿을 선택하고 상품명과 가격만 수정하면 바로 사용할 수 있습니다. 코딩 지식 없이도 멋진 배너를 만들 수 있어요!
+        </p>
+        <a href="/playground.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">✍️</div>
+          <div>
+            <div class="tool-title">2. 글자수 세기 + SEO 분석</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">네이버 최적화 가이드</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          네이버 블로그 글을 작성할 때, SEO 최적 글자수(1,500~2,000자)를 맞추고 있는지 실시간으로 확인할 수 있습니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>공백 포함/제외 글자수</li>
+          <li>예상 읽기 시간</li>
+          <li>네이버 SEO 최적화 진행률</li>
+          <li>목표 달성률 시각화</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          글을 다 쓴 후 복사해서 붙여넣으면, 현재 1,247자라서 253자만 더 쓰면 최적화 완료라고 알려줍니다. 더 이상 수동으로 글자수 세지 않아도 됩니다!
+        </p>
+        <a href="/wordcount.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">💡</div>
+          <div>
+            <div class="tool-title">3. AI 키워드 생성기</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">고수익 블로그 키워드</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          글감이 떨어졌을 때, 또는 새로운 카테고리를 시작할 때 관련 키워드를 자동으로 생성해줍니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>씨앗 키워드에서 40-60개 롱테일 생성</li>
+          <li>의도별 키워드 분류 (정보형/거래형/상업형)</li>
+          <li>블로그 제목 + 메타 설명 자동 생성</li>
+          <li>난이도 추정</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          "다이어트"를 입력하면 "40대 여성 다이어트 식단", "빠른 다이어트 방법", "다이어트 보조제 추천" 같은 구체적인 롱테일 키워드 60개를 받을 수 있습니다.
+        </p>
+        <a href="/keyword.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🎨</div>
+          <div>
+            <div class="tool-title">4. AI 썸네일 생성기</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">블로그 썸네일 자동 생성</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          매번 포토샵으로 썸네일 만들기 귀찮을 때, 텍스트만 입력하면 자동으로 썸네일이 만들어집니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>10가지 템플릿 (그라데이션, 단색, 패턴)</li>
+          <li>메인/서브 텍스트 입력</li>
+          <li>텍스트 색상 커스터마이징</li>
+          <li>1200x630px 최적 사이즈</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          "다이어트 식단 7일"을 입력하고 그라데이션 템플릿 선택하면, 3초 만에 멋진 썸네일이 완성됩니다. PNG로 바로 다운로드!
+        </p>
+        <a href="/thumbnail.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">📦</div>
+          <div>
+            <div class="tool-title">5. 이미지 일괄 압축</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">블로그 속도 개선</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          블로그에 올릴 이미지가 너무 커서 로딩이 느릴 때, 10개까지 한 번에 압축할 수 있습니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>드래그앤드롭 업로드</li>
+          <li>품질 조절 (10-100%)</li>
+          <li>최대 너비 설정</li>
+          <li>포맷 변환 (JPEG/PNG/WebP)</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          레시피 사진 10장을 드래그해서 넣고 품질 80%로 설정하면, 원본 5MB → 압축 후 1.2MB로 용량을 75% 줄여줍니다. 블로그 속도가 훨씬 빨라져요!
+        </p>
+        <a href="/compress.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon">🛍️</div>
+          <div>
+            <div class="tool-title">6. 쿠팡 링크 변환기</div>
+            <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">파트너스 수익화</p>
+          </div>
+        </div>
+        <p>
+          <strong>언제 사용하나요?</strong><br>
+          쿠팡 상품 링크를 파트너스 링크로 변환할 때, 여러 개를 한 번에 변환할 수 있습니다.
+        </p>
+        <p>
+          <strong>주요 기능:</strong>
+        </p>
+        <ul>
+          <li>토큰 자동 저장</li>
+          <li>여러 URL 동시 변환</li>
+          <li>HTML 코드 자동 생성</li>
+          <li>원클릭 복사</li>
+        </ul>
+        <p>
+          <strong>활용 사례:</strong><br>
+          추천 상품 5개의 쿠팡 URL을 복사해서 한 번에 붙여넣으면, 5개 모두 파트너스 링크로 변환됩니다. 일일이 쿠팡 파트너스 사이트에서 변환할 필요 없어요!
+        </p>
+        <a href="/affiliate.html" class="tool-link">지금 사용하기 →</a>
+      </div>
+
+      <h2>실전 작업 흐름 (Workflow)</h2>
+
+      <p>
+        GrewTools 6가지 도구를 조합하면 블로그 포스팅이 정말 빨라집니다. 다음은 실제 작업 흐름 예시입니다:
+      </p>
+
+      <div class="workflow-box">
+        <h4>📝 블로그 글 하나 완성하기 (30분 → 15분)</h4>
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div>
+              <strong>키워드 생성기</strong>로 글감 찾기 (2분)<br>
+              <span style="font-size: 14px; color: rgba(255,255,255,0.6);">"다이어트" 입력 → 40개 키워드 생성 → "빠른 다이어트 식단" 선택</span>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div>
+              <strong>썸네일 생성기</strong>로 이미지 만들기 (1분)<br>
+              <span style="font-size: 14px; color: rgba(255,255,255,0.6);">"빠른 다이어트 식단" 입력 → 템플릿 선택 → 다운로드</span>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div>
+              <strong>글 작성</strong> + 글자수 확인 (10분)<br>
+              <span style="font-size: 14px; color: rgba(255,255,255,0.6);">작성하면서 실시간으로 1,500자 도달 확인</span>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div>
+              <strong>이미지 압축</strong> (1분)<br>
+              <span style="font-size: 14px; color: rgba(255,255,255,0.6);">식단 사진 5장 드래그 → 일괄 압축 → 다운로드</span>
+            </div>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-number">5</div>
+            <div>
+              <strong>쿠팡 링크 변환</strong> (1분)<br>
+              <span style="font-size: 14px; color: rgba(255,255,255,0.6);">추천 제품 3개 URL 붙여넣기 → 변환 → 복사</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>왜 GrewTools인가?</h2>
+
+      <h3>완전 무료</h3>
+      <p>
+        모든 기능을 무료로 제공합니다. 숨겨진 유료 플랜이나 기능 제한이 없습니다.
+      </p>
+
+      <h3>회원가입 불필요</h3>
+      <p>
+        별도 가입 없이 바로 사용할 수 있습니다. 이메일도, 비밀번호도 필요 없습니다.
+      </p>
+
+      <h3>광고 없음</h3>
+      <p>
+        작업에 방해되는 광고가 전혀 없습니다. 깔끔한 UI로 집중할 수 있습니다.
+      </p>
+
+      <h3>한국어 최적화</h3>
+      <p>
+        네이버 블로그, 티스토리, 쿠팡 파트너스 등 <strong>한국 블로거에게 딱 맞춘</strong> 도구들입니다.
+      </p>
+
+      <h2>결론</h2>
+
+      <p>
+        GrewTools는 블로거의 반복 작업을 자동화하여 <strong>정말 중요한 일인 "글쓰기"에 집중</strong>할 수 있도록 돕습니다. 키워드 찾고, 썸네일 만들고, 이미지 압축하고, 링크 변환하는 시간을 절반으로 줄이세요.
+      </p>
+
+      <p>
+        모든 도구는 무료이고 회원가입도 필요 없습니다. 지금 바로 사용해보시고, 작업 시간이 정말 줄어드는지 확인해보세요!
+      </p>
+
+      <div style="text-align: center; margin-top: 48px; padding: 32px; background: rgba(245, 158, 11, 0.1); border-radius: 20px;">
+        <h3 style="margin-bottom: 20px; font-size: 24px;">🚀 지금 바로 시작하기</h3>
+        <a href="/" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 12px; color: #fff; text-decoration: none; font-weight: 700; font-size: 18px;">
+          GrewTools 사용하기 →
+        </a>
+      </div>
+    </div>
+
+    <footer class="post-footer">
+      <a href="/blog.html" class="back-btn">← 블로그 목록으로</a>
+    </footer>
+  </article>
+</body>
+</html>
