@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML 코드 미리보기 — GrewTools</title>
+  <meta name="description" content="HTML, CSS, JavaScript 코드를 실시간으로 미리보기. CodePen 스타일의 무료 온라인 에디터." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s;
+    }
+
+    body.light-mode {
+      background: #f5f5f7;
+      color: #1d1d1f;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    body.light-mode .header {
+      background: rgba(255,255,255,0.95);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    }
+    .logo-text h1 { font-size: 16px; font-weight: 600; }
+    .logo-text p { font-size: 11px; color: rgba(255,255,255,0.5); }
+    body.light-mode .logo-text h1 { color: #1d1d1f; }
+    body.light-mode .logo-text p { color: rgba(0,0,0,0.5); }
+
+    /* 툴바 */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* 뷰 버튼 */
+    .view-buttons {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    body.light-mode .view-buttons {
+      background: rgba(0,0,0,0.05);
+    }
+    
+    .view-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    body.light-mode .view-btn {
+      color: rgba(0,0,0,0.6);
+    }
+    .view-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    body.light-mode .view-btn:hover { color: #1d1d1f; background: rgba(0,0,0,0.1); }
+    .view-btn.active {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: #fff;
+    }
+
+    /* 템플릿 선택 */
+    .template-select {
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
+    body.light-mode .template-select {
+      background: rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: #1d1d1f;
+    }
+    .template-select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+    body.light-mode .template-select option {
+      background: #fff;
+      color: #1d1d1f;
+    }
+
+    /* 디바이스 토글 */
+    .device-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    body.light-mode .device-toggle {
+      background: rgba(0,0,0,0.05);
+    }
+    .device-btn {
+      padding: 6px 12px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    body.light-mode .device-btn {
+      color: rgba(0,0,0,0.6);
+    }
+    .device-btn:hover { background: rgba(255,255,255,0.1); }
+    body.light-mode .device-btn:hover { background: rgba(0,0,0,0.1); }
+    .device-btn.active {
+      background: rgba(139, 92, 246, 0.3);
+      color: #fff;
+    }
+    body.light-mode .device-btn.active {
+      color: #8b5cf6;
+    }
+
+    /* 액션 버튼 */
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .action-btn {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    body.light-mode .action-btn {
+      background: rgba(0,0,0,0.08);
+      color: #1d1d1f;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.2); }
+    body.light-mode .action-btn:hover { background: rgba(0,0,0,0.15); }
+    .action-btn.copied { background: #22c55e; color: #fff; }
+
+    /* 메인 영역 */
+    .main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    .main.code-only .preview-panel { display: none; }
+    .main.code-only .code-panel { width: 100%; }
+    .main.preview-only .code-panel { display: none; }
+    .main.preview-only .preview-panel { width: 100%; }
+    .main.fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+    }
+    .main.fullscreen .code-panel { display: none; }
+    .main.fullscreen .preview-panel { width: 100%; }
+
+    /* 코드 패널 */
+    .code-panel {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    body.light-mode .code-panel {
+      border-right: 1px solid rgba(0,0,0,0.1);
+    }
+    .panel-header {
+      padding: 10px 16px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    body.light-mode .panel-header {
+      background: rgba(0,0,0,0.03);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #ff5f57; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #28ca42; }
+    .file-name {
+      margin-left: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+    body.light-mode .file-name {
+      color: rgba(0,0,0,0.4);
+    }
+
+    textarea {
+      flex: 1;
+      padding: 16px;
+      background: rgba(0,0,0,0.2);
+      border: none;
+      color: #a5f3c4;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      resize: none;
+    }
+    body.light-mode textarea {
+      background: #fff;
+      color: #2d6a4f;
+    }
+    textarea:focus { outline: none; }
+    textarea::placeholder { color: rgba(255,255,255,0.3); }
+    body.light-mode textarea::placeholder { color: rgba(0,0,0,0.3); }
+
+    /* 구분선 */
+    .divider {
+      width: 4px;
+      background: linear-gradient(180deg, #8b5cf6, #ec4899, #8b5cf6);
+      cursor: col-resize;
+    }
+
+    /* 미리보기 패널 */
+    .preview-panel {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-header {
+      padding: 10px 16px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    body.light-mode .preview-header {
+      background: rgba(0,0,0,0.03);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .preview-label { font-size: 12px; color: rgba(255,255,255,0.4); }
+    body.light-mode .preview-label { color: rgba(0,0,0,0.4); }
+    
+    .preview-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: #e5e5e7;
+    }
+    body.light-mode .preview-container {
+      background: #f5f5f7;
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    .preview-frame.mobile {
+      max-width: 375px;
+      height: 667px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    /* 상태바 */
+    .status-bar {
+      padding: 8px 20px;
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    body.light-mode .status-bar {
+      background: rgba(255,255,255,0.95);
+      border-top: 1px solid rgba(0,0,0,0.1);
+      color: rgba(0,0,0,0.4);
+    }
+    .status-left { display: flex; align-items: center; gap: 16px; }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      margin-right: 6px;
+      display: inline-block;
+    }
+
+    /* 모바일 */
+    @media (max-width: 768px) {
+      .header { padding: 10px 12px; }
+      .logo-text h1 { font-size: 14px; }
+      .logo-text p { display: none; }
+      .toolbar { width: 100%; justify-content: space-between; }
+      .view-buttons { order: 1; }
+      .actions { order: 3; width: 100%; }
+      .main { flex-direction: column; }
+      .code-panel, .preview-panel { width: 100% !important; height: 50%; }
+      .main.code-only .code-panel { height: 100%; }
+      .main.preview-only .preview-panel { height: 100%; }
+      .divider { display: none; }
+      .preview-frame.mobile { max-width: 100%; height: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">🖥️</div>
+      <div class="logo-text">
+        <h1>HTML Playground</h1>
+        <p>실시간 코드 미리보기</p>
+      </div>
+    </div>
+    
+    <div class="toolbar">
+      <select class="template-select" onchange="loadTemplate(this.value)">
+        <option value="">📄 템플릿 선택</option>
+        <option value="default">기본 템플릿</option>
+        <option value="coupang">쿠팡 배너</option>
+        <option value="button">예쁜 버튼 모음</option>
+        <option value="table">반응형 표</option>
+        <option value="card">카드 레이아웃</option>
+        <option value="pricing">가격 테이블</option>
+      </select>
+
+      <div class="view-buttons">
+        <button class="view-btn" onclick="setView('code')">코드</button>
+        <button class="view-btn active" onclick="setView('split')">분할</button>
+        <button class="view-btn" onclick="setView('preview')">결과</button>
+      </div>
+
+      <div class="device-toggle">
+        <button class="device-btn active" onclick="setDevice('desktop')">🖥️</button>
+        <button class="device-btn" onclick="setDevice('mobile')">📱</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn" onclick="toggleTheme()">🌙</button>
+      <button class="action-btn" onclick="toggleFullscreen()">⛶</button>
+      <button class="action-btn" onclick="resetCode()">↺</button>
+      <button class="action-btn" id="copyBtn" onclick="copyCode()">📋</button>
+      <a href="/" class="action-btn">🏠</a>
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="main" id="main">
+    <div class="code-panel">
+      <div class="panel-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="file-name">index.html</span>
+      </div>
+      <textarea id="codeInput" placeholder="HTML 코드를 입력하세요..." oninput="updatePreview()"></textarea>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="preview-panel">
+      <div class="preview-header">
+        <span class="live-dot"></span>
+        <span class="preview-label">미리보기</span>
+        <span style="margin-left: auto; font-size: 14px;">✨</span>
+      </div>
+      <div class="preview-container">
+        <iframe id="preview" class="preview-frame" sandbox="allow-scripts allow-modals"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <!-- 상태바 -->
+  <footer class="status-bar">
+    <div class="status-left">
+      <span><span class="status-dot"></span>실시간 동기화</span>
+      <span id="charCount">0 자</span>
+      <span id="deviceInfo">🖥️ 데스크톱</span>
+    </div>
+    <span>HTML + CSS + JavaScript 지원</span>
+  </footer>
+
+  <script>
+    const templates = {
+      default: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(255,255,255,0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h1 { color: #333; margin-bottom: 10px; }
+    p { color: #666; }
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    button:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>안녕하세요! 👋</h1>
+    <p>HTML 코드를 자유롭게 수정해보세요</p>
+    <button onclick="alert('🎉 잘 작동해요!')">클릭 테스트</button>
+  </div>
+</body>
+</html>`,
+
+      coupang: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .banner {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      border-radius: 16px;
+      padding: 30px;
+      color: white;
+      box-shadow: 0 10px 40px rgba(238, 90, 111, 0.3);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 { font-size: 24px; margin-bottom: 10px; }
+    .price { font-size: 32px; font-weight: bold; margin: 15px 0; }
+    .discount { 
+      background: rgba(255,255,255,0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .btn {
+      background: white;
+      color: #ff6b6b;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: scale(1.02); }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <div class="discount">🔥 오늘만 특가</div>
+    <h2>무선 블루투스 이어폰</h2>
+    <div class="price">29,900원</div>
+    <p>✓ 노이즈 캔슬링 ✓ 30시간 재생 ✓ 무료배송</p>
+    <button class="btn" onclick="location.href='https://coupa.ng/your-link'">
+      쿠팡에서 확인하기 →
+    </button>
+    <p style="font-size: 11px; margin-top: 10px; opacity: 0.8;">
+      이 포스팅은 쿠팡 파트너스 활동의 일환으로 수수료를 제공받을 수 있습니다.
+    </p>
+  </div>
+</body>
+</html>`,
+
+      button: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: #f0f0f0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-success {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #eb3349, #f45c43);
+      color: white;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #667eea;
+      color: #667eea;
+    }
+    .btn-outline:hover {
+      background: #667eea;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <button class="btn btn-primary">Primary Button</button>
+  <button class="btn btn-success">Success Button</button>
+  <button class="btn btn-danger">Danger Button</button>
+  <button class="btn btn-outline">Outline Button</button>
+</body>
+</html>`,
+
+      table: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .table-container {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    th, td {
+      padding: 16px;
+      text-align: left;
+    }
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+    tbody tr {
+      border-bottom: 1px solid #e9ecef;
+    }
+    @media (max-width: 600px) {
+      th, td { padding: 12px 8px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>제품명</th>
+          <th>가격</th>
+          <th>재고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>무선 이어폰</td>
+          <td>29,900원</td>
+          <td>재고 있음</td>
+        </tr>
+        <tr>
+          <td>블루투스 스피커</td>
+          <td>49,000원</td>
+          <td>품절</td>
+        </tr>
+        <tr>
+          <td>USB 충전기</td>
+          <td>15,000원</td>
+          <td>재고 있음</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>`,
+
+      card: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .card h3 { color: #333; margin-bottom: 8px; }
+    .card p { color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <h3>빠른 속도</h3>
+      <p>최적화된 성능으로 빠르게 작동합니다</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <h3>아름다운 디자인</h3>
+      <p>모던하고 깔끔한 UI를 제공합니다</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h3>안전한 보안</h3>
+      <p>최신 보안 기술로 데이터를 보호합니다</p>
+    </div>
+  </div>
+</body>
+</html>`,
+
+      pricing: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px 20px;
+      background: #f8f9fa;
+    }
+    .pricing-container {
+      display: flex;
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .pricing-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      flex: 1;
+      min-width: 280px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-8px); }
+    .pricing-card.featured {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: scale(1.05);
+    }
+    .plan-name { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+    .price { font-size: 40px; font-weight: bold; margin: 16px 0; }
+    .price span { font-size: 16px; opacity: 0.7; }
+    .features { list-style: none; margin: 24px 0; }
+    .features li { padding: 8px 0; }
+    .features li:before { content: "✓ "; color: #22c55e; font-weight: bold; }
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pricing-card:not(.featured) .btn {
+      background: #667eea;
+      color: white;
+    }
+    .pricing-card.featured .btn {
+      background: white;
+      color: #667eea;
+    }
+    .btn:hover { transform: scale(1.02); }
+  </style>
+</head>
+<body>
+  <div class="pricing-container">
+    <div class="pricing-card">
+      <div class="plan-name">무료</div>
+      <div class="price">0원<span>/월</span></div>
+      <ul class="features">
+        <li>기본 기능</li>
+        <li>5GB 저장공간</li>
+        <li>이메일 지원</li>
+      </ul>
+      <button class="btn">시작하기</button>
+    </div>
+    
+    <div class="pricing-card featured">
+      <div class="plan-name">프로</div>
+      <div class="price">9,900원<span>/월</span></div>
+      <ul class="features">
+        <li>모든 기능</li>
+        <li>100GB 저장공간</li>
+        <li>24시간 지원</li>
+        <li>우선 처리</li>
+      </ul>
+      <button class="btn">시작하기</button>
+    </div>
+    
+    <div class="pricing-card">
+      <div class="plan-name">기업</div>
+      <div class="price">문의<span></span></div>
+      <ul class="features">
+        <li>무제한 기능</li>
+        <li>무제한 저장공간</li>
+        <li>전담 매니저</li>
+        <li>맞춤 솔루션</li>
+      </ul>
+      <button class="btn">문의하기</button>
+    </div>
+  </div>
+</body>
+</html>`
+    };
+
+    const codeInput = document.getElementById('codeInput');
+    const preview = document.getElementById('preview');
+    const charCount = document.getElementById('charCount');
+    const copyBtn = document.getElementById('copyBtn');
+    const main = document.getElementById('main');
+    const deviceInfo = document.getElementById('deviceInfo');
+
+    let currentDevice = 'desktop';
+    let isFullscreen = false;
+
+    // 초기화
+    codeInput.value = templates.default;
+    updatePreview();
+
+    function updatePreview() {
+      preview.srcdoc = codeInput.value;
+      charCount.textContent = codeInput.value.length.toLocaleString() + ' 자';
+    }
+
+    function setView(mode) {
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      main.className = 'main';
+      if (mode === 'code') main.classList.add('code-only');
+      if (mode === 'preview') main.classList.add('preview-only');
+    }
+
+    function setDevice(device) {
+      currentDevice = device;
+      document.querySelectorAll('.device-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      if (device === 'mobile') {
+        preview.classList.add('mobile');
+        deviceInfo.textContent = '📱 모바일 (375x667)';
+      } else {
+        preview.classList.remove('mobile');
+        deviceInfo.textContent = '🖥️ 데스크톱';
+      }
+    }
+
+    function loadTemplate(templateName) {
+      if (templateName && templates[templateName]) {
+        codeInput.value = templates[templateName];
+        updatePreview();
+      }
+      event.target.value = '';
+    }
+
+    function copyCode() {
+      navigator.clipboard.writeText(codeInput.value);
+      copyBtn.textContent = '✓ 복사됨!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => {
+        copyBtn.textContent = '📋';
+        copyBtn.classList.remove('copied');
+      }, 2000);
+    }
+
+    function resetCode() {
+      if (confirm('현재 코드를 초기화하시겠습니까?')) {
+        codeInput.value = templates.default;
+        updatePreview();
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const btn = event.target;
+      btn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+    }
+
+    function toggleFullscreen() {
+      isFullscreen = !isFullscreen;
+      if (isFullscreen) {
+        main.classList.add('fullscreen');
+        event.target.textContent = '⛶';
+      } else {
+        main.classList.remove('fullscreen');
+        event.target.textContent = '⛶';
+      }
+    }
+
+    // 키보드 단축키
+    document.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd + S: 복사
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        copyCode();
+      }
+      // Ctrl/Cmd + R: 초기화
+      if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        resetCode();
+      }
+      // F11: 전체화면
+      if (e.key === 'F11') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
+  </script>
+</body>
+</html>

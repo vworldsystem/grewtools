@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>글자수 세기 + 네이버 SEO 분석 — GrewTools</title>
+  <meta name="description" content="실시간 글자수 확인과 네이버 블로그 SEO 최적화 가이드. 공백 포함/제외, 읽기 시간, 최적 글자수 분석." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    }
+    .logo-text h1 { font-size: 18px; font-weight: 700; }
+    .logo-text p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.2); }
+    .action-btn.primary {
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    }
+    .action-btn.primary:hover { opacity: 0.9; }
+
+    /* 메인 */
+    .main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* 그리드 레이아웃 */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+    }
+
+    /* 텍스트 입력 영역 */
+    .editor-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .editor-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .clear-btn {
+      padding: 8px 16px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .clear-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 500px;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.8;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #8b5cf6;
+    }
+    textarea::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* 통계 섹션 */
+    .stats-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 통계 카드 */
+    .stats-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .stats-card h3 {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 600;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .stat-item {
+      background: rgba(0,0,0,0.3);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* SEO 가이드 */
+    .seo-guide {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .seo-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .seo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #22c55e, #10b981);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .seo-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .seo-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .seo-target {
+      background: rgba(0,0,0,0.3);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .target-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+    .target-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #22c55e;
+    }
+
+    .progress-container {
+      margin-bottom: 12px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+    .progress-fill.success {
+      background: linear-gradient(90deg, #22c55e, #10b981);
+    }
+    .progress-fill.warning {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .seo-message {
+      padding: 12px 16px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #86efac;
+    }
+    .seo-message.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    /* 추가 정보 */
+    .info-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .info-card h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .info-item {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.7);
+    }
+    .info-icon {
+      flex-shrink: 0;
+      color: #60a5fa;
+    }
+
+    /* 반응형 */
+    @media (max-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main { padding: 24px 16px; }
+      .page-title { font-size: 28px; }
+      .stats-section {
+        grid-template-columns: 1fr;
+      }
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+      textarea { min-height: 300px; }
+      .header-actions .action-btn span { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">✍️</div>
+      <div class="logo-text">
+        <h1>글자수 세기</h1>
+        <p>네이버 SEO 최적화</p>
+      </div>
+    </a>
+    <div class="header-actions">
+      <button class="action-btn" onclick="copyText()">📋 <span>복사</span></button>
+      <a href="/" class="action-btn primary">🏠 <span>홈</span></a>
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="main">
+    <div class="page-header">
+      <h2 class="page-title">글자수 세기 + SEO 분석</h2>
+      <p class="page-subtitle">실시간 글자수 확인과 네이버 블로그 최적화 가이드</p>
+    </div>
+
+    <div class="content-grid">
+      <!-- 텍스트 입력 -->
+      <div class="editor-section">
+        <div class="editor-header">
+          <h3 class="editor-title">✏️ 글 내용 입력</h3>
+          <button class="clear-btn" onclick="clearText()">🗑️ 전체 삭제</button>
+        </div>
+        <textarea 
+          id="textInput" 
+          placeholder="블로그 글을 여기에 붙여넣거나 입력하세요...
+
+네이버 블로그 SEO 최적 글자수: 1,500~2,000자
+검색 상위 노출을 위한 권장 분량입니다.
+
+✓ 제목: 20~30자
+✓ 본문: 1,500~2,000자
+✓ 이미지: 3~5개 권장
+✓ 키워드: 자연스럽게 3~5회 반복"
+          oninput="updateStats()"
+        ></textarea>
+      </div>
+
+      <!-- 통계 및 가이드 -->
+      <div class="stats-section">
+        <!-- 기본 통계 -->
+        <div class="stats-card">
+          <h3>📊 글자수 통계</h3>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <div class="stat-label">공백 포함</div>
+              <div class="stat-value" id="charWithSpace">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">공백 제외</div>
+              <div class="stat-value" id="charWithoutSpace">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">단어 수</div>
+              <div class="stat-value" id="wordCount">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">읽기 시간</div>
+              <div class="stat-value" id="readTime">0분</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO 가이드 -->
+        <div class="seo-guide">
+          <div class="seo-header">
+            <div class="seo-icon">🎯</div>
+            <div>
+              <div class="seo-title">네이버 SEO 최적화</div>
+              <div class="seo-subtitle">검색 상위 노출 가이드</div>
+            </div>
+          </div>
+
+          <div class="seo-target">
+            <div class="target-label">최적 글자수</div>
+            <div class="target-value">1,500 ~ 2,000자</div>
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-header">
+              <span>진행률</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressBar"></div>
+            </div>
+          </div>
+
+          <div class="seo-message" id="seoMessage">
+            💡 1,500자 이상 작성하면 검색 노출에 유리합니다
+          </div>
+        </div>
+
+        <!-- 추가 팁 -->
+        <div class="info-card">
+          <h3>💡 SEO 최적화 팁</h3>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-icon">✓</span>
+              <span>제목에 핵심 키워드 포함 (20~30자)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">✓</span>
+              <span>첫 문단에 키워드 자연스럽게 배치</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">✓</span>
+              <span>본문 1,500~2,000자 작성 권장</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">✓</span>
+              <span>이미지 3~5개 포함 (SEO 효과)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">✓</span>
+              <span>소제목 활용으로 가독성 향상</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const charWithSpace = document.getElementById('charWithSpace');
+    const charWithoutSpace = document.getElementById('charWithoutSpace');
+    const wordCount = document.getElementById('wordCount');
+    const readTime = document.getElementById('readTime');
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    const seoMessage = document.getElementById('seoMessage');
+
+    function updateStats() {
+      const text = textInput.value;
+      
+      // 기본 통계
+      const withSpace = text.length;
+      const withoutSpace = text.replace(/\s/g, '').length;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const minutes = Math.ceil(withSpace / 500); // 1분에 약 500자 읽는다고 가정
+
+      charWithSpace.textContent = withSpace.toLocaleString();
+      charWithoutSpace.textContent = withoutSpace.toLocaleString();
+      wordCount.textContent = words.toLocaleString();
+      readTime.textContent = minutes + '분';
+
+      // SEO 분석 (공백 제외 기준)
+      const minTarget = 1500;
+      const maxTarget = 2000;
+      let progress = 0;
+      let message = '';
+      let progressClass = '';
+
+      if (withoutSpace === 0) {
+        message = '💡 1,500자 이상 작성하면 검색 노출에 유리합니다';
+        progressClass = '';
+      } else if (withoutSpace < minTarget) {
+        progress = (withoutSpace / minTarget) * 100;
+        const remaining = minTarget - withoutSpace;
+        message = `📝 ${remaining.toLocaleString()}자 더 작성하면 최적화 완료!`;
+        progressClass = 'warning';
+      } else if (withoutSpace <= maxTarget) {
+        progress = 100;
+        message = '✅ 완벽해요! 네이버 검색 최적화 글자수입니다';
+        progressClass = 'success';
+      } else {
+        progress = 100;
+        const excess = withoutSpace - maxTarget;
+        message = `✅ 충분해요! (권장보다 ${excess.toLocaleString()}자 더 작성)`;
+        progressClass = 'success';
+      }
+
+      progressBar.style.width = Math.min(progress, 100) + '%';
+      progressBar.className = 'progress-fill ' + progressClass;
+      progressPercent.textContent = Math.round(progress) + '%';
+      
+      seoMessage.textContent = message;
+      seoMessage.className = 'seo-message ' + (progressClass === 'warning' ? 'warning' : '');
+    }
+
+    function clearText() {
+      if (confirm('작성한 내용을 모두 삭제하시겠습니까?')) {
+        textInput.value = '';
+        updateStats();
+      }
+    }
+
+    function copyText() {
+      if (textInput.value.trim() === '') {
+        alert('복사할 내용이 없습니다.');
+        return;
+      }
+      navigator.clipboard.writeText(textInput.value);
+      
+      const btn = event.target.closest('.action-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✓ 복사됨!';
+      btn.style.background = '#22c55e';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+      }, 2000);
+    }
+
+    // 초기 실행
+    updateStats();
+  </script>
+</body>
+</html>

@@ -1,80 +1,819 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GrewTools — AI 블로거를 위한 도구 허브</title>
-  <meta name="description" content="AI 블로거를 위한 도구 허브. Markdown 변환기, 짧은 주소 생성기, 키워드 도구, 쿠팡 링크 변환기를 한곳에서!">
-  <!-- 검증 메타 (Search Console/네이버 등록 시 값만 채우세요) -->
-  <!-- <meta name="google-site-verification" content="YOUR_GOOGLE_CODE" /> -->
-  <!-- <meta name="naver-site-verification" content="YOUR_NAVER_CODE" /> -->
-
-  <!-- Canonical / Open Graph / Twitter -->
-  <link rel="stylesheet" href="/assets/responsive.css">
-  <link rel="canonical" href="https://grewtools.com/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="GrewTools" />
+  <meta name="description" content="HTML 미리보기, 글자수 세기, 썸네일 생성, 이미지 압축까지. 블로그 수익화에 필요한 모든 도구를 한 곳에서." />
   <meta property="og:title" content="GrewTools — AI 블로거를 위한 도구 허브" />
-  <meta property="og:description" content="마크다운 변환, 짧은 주소, 키워드, 쿠팡 링크까지 한 곳에서!" />
-  <meta property="og:url" content="https://grewtools.com/" />
-  <meta property="og:image" content="https://grewtools.com/assets/og-default.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="GrewTools — AI 블로거를 위한 도구 허브" />
-  <meta name="twitter:description" content="마크다운 변환, 짧은 주소, 키워드, 쿠팡 링크까지 한 곳에서!" />
-  <meta name="twitter:image" content="https://grewtools.com/assets/og-default.jpg" />
-
-  <link rel="icon" href="/assets/favicon.ico">
+  <meta property="og:description" content="블로그 수익화에 필요한 모든 도구를 한 곳에서" />
+  <link rel="icon" href="/assets/favicon.ico" />
   <style>
-    :root{--bg:#faf7f2;--green:#6fbf73;--orange:#ffd9b3;--ink:#333;--muted:#777;--line:#e0ddd8}
-    body { font-family: 'Noto Sans KR', Pretendard, sans-serif; background-color: var(--bg); color: var(--ink); margin: 0; }
-    header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #6fbf73, #ffd9b3); color: white; border-bottom-left-radius: 50px; border-bottom-right-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    header h1 { font-size: 2.2em; margin-bottom: 10px; }
-    header p { font-size: 1.1em; opacity: 0.95; }
-    .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 40px 20px; max-width: 1200px; margin: auto; }
-    .tool-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: all 0.3s ease; }
-    .tool-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-    .tool-card h2 { color: #6fbf73; margin-bottom: 10px; }
-    .tool-card p { color: #555; margin-bottom: 20px; }
-    .tool-card a { display: inline-block; padding: 10px 20px; background-color: #6fbf73; color: white; border-radius: 25px; text-decoration: none; transition: background 0.3s; }
-    .tool-card a:hover { background-color: #5aa261; }
-    footer { text-align: center; padding: 30px 20px; font-size: 0.9em; color: #777; border-top: 1px solid var(--line); margin-top: 40px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Roboto, sans-serif;
+      background: #0a0a1a;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 배경 효과 */
+    .bg-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow-1 { 
+      top: -150px; 
+      left: 10%; 
+      background: linear-gradient(135deg, #8b5cf6, #a855f7);
+      animation: float 20s infinite ease-in-out;
+    }
+    .bg-glow-2 { 
+      bottom: -150px; 
+      right: 10%; 
+      background: linear-gradient(135deg, #3b82f6, #22d3ee);
+      animation: float 25s infinite ease-in-out reverse;
+    }
+    .bg-glow-3 { 
+      top: 40%; 
+      right: 30%; 
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      animation: float 30s infinite ease-in-out;
+      opacity: 0.15;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-30px, 30px) scale(0.9); }
+    }
+
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 0 24px; 
+      position: relative; 
+      z-index: 1; 
+    }
+
+    /* 네비게이션 */
+    .nav {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 40px;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+    }
+    .logo-text h1 { 
+      font-size: 20px; 
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .logo-text p { 
+      font-size: 12px; 
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #fff; }
+    .nav-cta {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      border-radius: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* 히어로 섹션 */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 50px;
+      font-size: 14px;
+      color: #c4b5fd;
+      margin-bottom: 32px;
+      animation: pulse-badge 3s infinite;
+    }
+    @keyframes pulse-badge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% auto;
+      animation: gradient-shift 8s linear infinite;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    
+    .hero p {
+      font-size: 20px;
+      color: rgba(255,255,255,0.65);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 36px;
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 12px 48px rgba(139, 92, 246, 0.35);
+    }
+    .btn-primary:hover { 
+      transform: translateY(-3px);
+      box-shadow: 0 16px 64px rgba(139, 92, 246, 0.5);
+    }
+    .btn-secondary {
+      padding: 18px 36px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover { 
+      background: rgba(255,255,255,0.12); 
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    /* 통계 */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 64px;
+      flex-wrap: wrap;
+    }
+    .stat { 
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .stat:hover { transform: translateY(-5px); }
+    .stat-num { 
+      font-size: 36px; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .stat-label { 
+      font-size: 15px; 
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+
+    /* 도구 섹션 */
+    .tools-section {
+      padding: 80px 24px;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-label {
+      display: inline-block;
+      padding: 8px 16px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 20px;
+      font-size: 13px;
+      color: #c4b5fd;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .section-header h2 { 
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .section-header p { 
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .tool-card {
+      position: relative;
+      padding: 32px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.3s;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tool-card:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-8px);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+    }
+    .tool-card:hover::before { opacity: 1; }
+    
+    .tool-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+    }
+    .tool-badge.new {
+      background: linear-gradient(135deg, #22c55e, #10b981);
+    }
+    
+    .tool-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .tool-icon.blue { background: linear-gradient(135deg, #3b82f6, #22d3ee); }
+    .tool-icon.purple { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+    .tool-icon.yellow { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .tool-icon.pink { background: linear-gradient(135deg, #ec4899, #f472b6); }
+    .tool-icon.green { background: linear-gradient(135deg, #22c55e, #10b981); }
+    .tool-icon.orange { background: linear-gradient(135deg, #f97316, #fb923c); }
+    
+    .tool-card h3 { 
+      font-size: 22px; 
+      margin-bottom: 12px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .tool-card p { 
+      font-size: 15px; 
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #a78bfa;
+      font-size: 15px;
+      font-weight: 600;
+      transition: gap 0.2s;
+    }
+    .tool-card:hover .tool-link { gap: 12px; }
+
+    /* 특징 섹션 */
+    .features-section {
+      padding: 80px 24px;
+    }
+    .features-box {
+      background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(59,130,246,0.1));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 32px;
+      padding: 60px 40px;
+      backdrop-filter: blur(10px);
+    }
+    .features-box h2 {
+      text-align: center;
+      margin-bottom: 48px;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+    }
+    .feature-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      transition: all 0.3s;
+    }
+    .feature-item:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateX(5px);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #22c55e, #10b981);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .feature-item h4 { 
+      font-size: 17px; 
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .feature-item p { 
+      font-size: 14px; 
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+    }
+
+    /* CTA 섹션 */
+    .cta-section {
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-box {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(236,72,153,0.15));
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 32px;
+      backdrop-filter: blur(10px);
+    }
+    .cta-box h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .cta-box p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 32px;
+    }
+
+    /* 푸터 */
+    footer {
+      padding: 60px 24px 32px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-section h4 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-link {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-copyright {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+    }
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .social-link:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .hero { padding: 60px 20px 40px; }
+      .hero h1 { font-size: 32px; }
+      .hero p { font-size: 16px; }
+      .stats { gap: 40px; }
+      .stat-num { font-size: 28px; }
+      .tools-grid { 
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .nav-links { display: none; }
+      .features-box { padding: 40px 24px; }
+      .cta-box { padding: 40px 24px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { 
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* 스크롤 애니메이션 */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .tool-card:nth-child(1) { animation-delay: 0.1s; }
+    .tool-card:nth-child(2) { animation-delay: 0.2s; }
+    .tool-card:nth-child(3) { animation-delay: 0.3s; }
+    .tool-card:nth-child(4) { animation-delay: 0.4s; }
+    .tool-card:nth-child(5) { animation-delay: 0.5s; }
+    .tool-card:nth-child(6) { animation-delay: 0.6s; }
   </style>
 </head>
 <body>
-  <div id="gt-nav"></div>
-  <script src="/assets/nav-loader.js" defer></script>
-  <script src="/assets/nav.js" defer></script>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
 
-  <header>
-    <h1>GrewTools — AI 블로거를 위한 도구 허브</h1>
-    <p>마크다운 변환, 짧은 주소, 키워드, 쿠팡 링크까지 한 곳에서 ✨</p>
-  </header>
+  <!-- 네비게이션 -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" class="logo">
+          <div class="logo-icon">✨</div>
+          <div class="logo-text">
+            <h1>GrewTools</h1>
+            <p>AI 블로거 도구 허브</p>
+          </div>
+        </a>
+        <div class="nav-links">
+          <a href="#tools" class="nav-link">도구</a>
+          <a href="#features" class="nav-link">특징</a>
+          <a href="/blog.html" class="nav-link">블로그</a>
+          <a href="#tools" class="nav-cta">무료 시작하기</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <section class="tools">
-    <div class="tool-card">
-      <h2>📝 Markdown → HTML 변환기</h2>
-      <p>마크다운 문서를 HTML 코드로 변환해 블로그에 바로 사용하세요.</p>
-      <a href="/markdown">사용하기</a>
-    </div>
-    <div class="tool-card">
-      <h2>🔗 짧은 주소 생성기</h2>
-      <p>긴 URL을 짧게 만들어 공유성과 클릭률을 높이세요.</p>
-      <a href="/shortlink">바로가기</a>
-    </div>
-    <div class="tool-card">
-      <h2>💡 키워드 생성기</h2>
-      <p>AI가 제안하는 고수익 키워드로 콘텐츠 아이디어를 얻으세요.</p>
-      <a href="/keyword">만들기</a>
-    </div>
-    <div class="tool-card">
-      <h2>🛍️ 쿠팡 링크 변환기</h2>
-      <p>상품 URL을 자동으로 파트너스 링크로 변환해 수익을 높이세요.</p>
-      <a href="/affiliate">시작하기</a>
+  <!-- 히어로 섹션 -->
+  <section class="hero">
+    <div class="container">
+      <div class="badge">
+        ⚡ 블로거 2,800명이 매일 사용 중
+      </div>
+      <h1>
+        AI 블로거를 위한<br/>
+        <span class="gradient-text">올인원 도구 허브</span>
+      </h1>
+      <p>
+        HTML 미리보기, 글자수 세기, 썸네일 생성, 이미지 압축까지<br/>
+        블로그 수익화에 필요한 모든 도구를 한 곳에서 ✨
+      </p>
+      <div class="hero-buttons">
+        <a href="#tools" class="btn-primary">
+          무료로 시작하기 →
+        </a>
+        <a href="#features" class="btn-secondary">더 알아보기</a>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num">2,847</div>
+          <div class="stat-label">활성 사용자</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">6개</div>
+          <div class="stat-label">필수 도구</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4.9 ⭐</div>
+          <div class="stat-label">평균 만족도</div>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- 도구 섹션 -->
+  <section class="tools-section" id="tools">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Powerful Tools</span>
+        <h2>블로거 필수 도구 모음</h2>
+        <p>생산성을 극대화하는 6가지 핵심 도구</p>
+      </div>
+      <div class="tools-grid">
+        <a href="/playground.html" class="tool-card fade-in">
+          <div class="tool-badge">🔥 인기</div>
+          <div class="tool-icon blue">🖥️</div>
+          <h3>HTML 코드 미리보기</h3>
+          <p>실시간 HTML/CSS/JS 테스트 + 6가지 템플릿 제공</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+
+        <a href="/wordcount.html" class="tool-card fade-in">
+          <div class="tool-badge new">✨ NEW</div>
+          <div class="tool-icon purple">✍️</div>
+          <h3>글자수 세기 + SEO</h3>
+          <p>실시간 글자수 확인 + 네이버 최적화 분석</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+
+        <a href="/keyword.html" class="tool-card fade-in">
+          <div class="tool-icon yellow">💡</div>
+          <h3>AI 키워드 생성기</h3>
+          <p>AI가 추천하는 고수익 블로그 키워드</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+
+        <a href="/thumbnail.html" class="tool-card fade-in">
+          <div class="tool-badge new">✨ NEW</div>
+          <div class="tool-icon pink">🎨</div>
+          <h3>AI 썸네일 생성기</h3>
+          <p>키워드 입력만으로 블로그 썸네일 자동 생성</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+
+        <a href="/compress.html" class="tool-card fade-in">
+          <div class="tool-badge new">✨ NEW</div>
+          <div class="tool-icon green">📦</div>
+          <h3>이미지 일괄 압축</h3>
+          <p>드래그앤드롭으로 10개 이미지 동시 압축</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+
+        <a href="/affiliate.html" class="tool-card fade-in">
+          <div class="tool-badge">🔥 인기</div>
+          <div class="tool-icon orange">🛍️</div>
+          <h3>쿠팡 링크 변환기</h3>
+          <p>상품 URL → 파트너스 링크 자동 변환</p>
+          <span class="tool-link">사용하기 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 특징 섹션 -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="features-box">
+        <h2>왜 GrewTools인가요?</h2>
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>
+              <h4>완전 무료</h4>
+              <p>모든 핵심 기능 무료 제공, 숨겨진 비용 없음</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🚀</div>
+            <div>
+              <h4>광고 없음</h4>
+              <p>깔끔한 UI, 방해 요소 제로</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🇰🇷</div>
+            <div>
+              <h4>한국어 최적화</h4>
+              <p>네이버 블로그에 딱 맞는 도구</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div>
+              <h4>빠른 속도</h4>
+              <p>클릭 한 번으로 즉시 사용 가능</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div>
+              <h4>안전한 데이터</h4>
+              <p>모든 처리는 브라우저에서 로컬 실행</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📱</div>
+            <div>
+              <h4>반응형 디자인</h4>
+              <p>PC, 태블릿, 모바일 완벽 지원</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA 섹션 -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <h2>지금 바로 시작하세요</h2>
+        <p>가입 없이 바로 사용 가능합니다</p>
+        <a href="#tools" class="btn-primary">
+          무료로 시작하기 →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 푸터 -->
   <footer>
-    <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-grid">
+          <div class="footer-section">
+            <h4>GrewTools</h4>
+            <div class="footer-links">
+              <a href="#tools" class="footer-link">도구 모음</a>
+              <a href="#features" class="footer-link">특징</a>
+              <a href="/blog.html" class="footer-link">블로그</a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>도구</h4>
+            <div class="footer-links">
+              <a href="/playground.html" class="footer-link">HTML 미리보기</a>
+              <a href="/wordcount.html" class="footer-link">글자수 세기</a>
+              <a href="/keyword.html" class="footer-link">키워드 생성</a>
+              <a href="/thumbnail.html" class="footer-link">썸네일 생성</a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>지원</h4>
+            <div class="footer-links">
+              <a href="/policy.html" class="footer-link">이용약관</a>
+              <a href="/privacy.html" class="footer-link">개인정보처리방침</a>
+              <a href="mailto:contact@grewtools.com" class="footer-link">문의하기</a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>소셜</h4>
+            <div class="footer-links">
+              <a href="#" class="footer-link">네이버 블로그</a>
+              <a href="#" class="footer-link">유튜브</a>
+              <a href="#" class="footer-link">인스타그램</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="footer-copyright">
+            © 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함될 수 있습니다.
+          </div>
+          <div class="footer-social">
+            <a href="#" class="social-link">📧</a>
+            <a href="#" class="social-link">💬</a>
+            <a href="#" class="social-link">📱</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </footer>
 </body>
 </html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 썸네일 생성기 — GrewTools</title>
+  <meta name="description" content="텍스트 입력만으로 블로그 썸네일 자동 생성. 10가지 템플릿, 무료 다운로드." />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+    }
+    .logo-text h1 { font-size: 18px; font-weight: 700; }
+    .logo-text p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.2); }
+    .action-btn.primary {
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+    }
+    .action-btn.primary:hover { opacity: 0.9; }
+
+    /* 메인 */
+    .main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* 그리드 */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+    }
+
+    /* 컨트롤 패널 */
+    .control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .control-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .control-card h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group:last-child {
+      margin-bottom: 0;
+    }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #ec4899;
+    }
+
+    /* 템플릿 선택 */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .template-item {
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.1);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .template-item:hover {
+      border-color: #ec4899;
+      transform: scale(1.05);
+    }
+    .template-item.active {
+      border-color: #ec4899;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    }
+    .template-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px;
+      background: rgba(0,0,0,0.8);
+      font-size: 11px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* 색상 선택 */
+    .color-input {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .color-picker {
+      width: 60px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .color-value {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* 프리뷰 */
+    .preview-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .preview-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .download-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+    }
+
+    .canvas-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.2);
+      border-radius: 16px;
+      padding: 40px;
+      min-height: 400px;
+    }
+    #thumbnailCanvas {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .size-info {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* 반응형 */
+    @media (max-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      .template-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main { padding: 24px 16px; }
+      .page-title { font-size: 28px; }
+      .template-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .canvas-container {
+        padding: 20px;
+        min-height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">🎨</div>
+      <div class="logo-text">
+        <h1>썸네일 생성기</h1>
+        <p>AI 블로그 썸네일</p>
+      </div>
+    </a>
+    <div class="header-actions">
+      <a href="/" class="action-btn primary">🏠 홈</a>
+    </div>
+  </header>
+
+  <!-- 메인 -->
+  <main class="main">
+    <div class="page-header">
+      <h2 class="page-title">AI 썸네일 생성기</h2>
+      <p class="page-subtitle">텍스트만 입력하면 블로그 썸네일 완성!</p>
+    </div>
+
+    <div class="content-grid">
+      <!-- 컨트롤 패널 -->
+      <div class="control-panel">
+        <div class="control-card">
+          <h3>✏️ 텍스트 입력</h3>
+          <div class="input-group">
+            <label class="input-label">메인 제목</label>
+            <input type="text" class="input-field" id="mainText" placeholder="예: 다이어트 식단" maxlength="30" oninput="generateThumbnail()">
+          </div>
+          <div class="input-group">
+            <label class="input-label">서브 제목 (선택)</label>
+            <input type="text" class="input-field" id="subText" placeholder="예: 7일만에 5kg 감량" maxlength="50" oninput="generateThumbnail()">
+          </div>
+        </div>
+
+        <div class="control-card">
+          <h3>🎨 템플릿 선택</h3>
+          <div class="template-grid">
+            <div class="template-item active" data-template="gradient1" onclick="selectTemplate('gradient1')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="template-name">그라데이션 1</div>
+            </div>
+            <div class="template-item" data-template="gradient2" onclick="selectTemplate('gradient2')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <div class="template-name">그라데이션 2</div>
+            </div>
+            <div class="template-item" data-template="gradient3" onclick="selectTemplate('gradient3')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <div class="template-name">그라데이션 3</div>
+            </div>
+            <div class="template-item" data-template="gradient4" onclick="selectTemplate('gradient4')" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <div class="template-name">그라데이션 4</div>
+            </div>
+            <div class="template-item" data-template="gradient5" onclick="selectTemplate('gradient5')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <div class="template-name">그라데이션 5</div>
+            </div>
+            <div class="template-item" data-template="gradient6" onclick="selectTemplate('gradient6')" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+              <div class="template-name">그라데이션 6</div>
+            </div>
+            <div class="template-item" data-template="solid1" onclick="selectTemplate('solid1')" style="background: #1e293b;">
+              <div class="template-name">다크</div>
+            </div>
+            <div class="template-item" data-template="solid2" onclick="selectTemplate('solid2')" style="background: #ffffff;">
+              <div class="template-name" style="color: #000;">라이트</div>
+            </div>
+            <div class="template-item" data-template="pattern1" onclick="selectTemplate('pattern1')" style="background: linear-gradient(135deg, #667eea 25%, transparent 25%), linear-gradient(225deg, #667eea 25%, transparent 25%), linear-gradient(45deg, #667eea 25%, transparent 25%), linear-gradient(315deg, #667eea 25%, #764ba2 25%); background-size: 40px 40px;">
+              <div class="template-name">패턴 1</div>
+            </div>
+            <div class="template-item" data-template="pattern2" onclick="selectTemplate('pattern2')" style="background: repeating-linear-gradient(45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px);">
+              <div class="template-name">패턴 2</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-card">
+          <h3>🎨 색상 커스터마이징</h3>
+          <div class="input-group">
+            <label class="input-label">메인 텍스트 색상</label>
+            <div class="color-input">
+              <input type="color" class="color-picker" id="mainColor" value="#ffffff" oninput="updateColorValue('main'); generateThumbnail()">
+              <input type="text" class="color-value" id="mainColorValue" value="#ffffff" readonly>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">서브 텍스트 색상</label>
+            <div class="color-input">
+              <input type="color" class="color-picker" id="subColor" value="#e0e0e0" oninput="updateColorValue('sub'); generateThumbnail()">
+              <input type="text" class="color-value" id="subColorValue" value="#e0e0e0" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 프리뷰 -->
+      <div class="preview-section">
+        <div class="preview-header">
+          <h3 class="preview-title">🖼️ 미리보기</h3>
+          <button class="download-btn" onclick="downloadThumbnail()">
+            💾 다운로드
+          </button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="thumbnailCanvas" width="1200" height="630"></canvas>
+        </div>
+        <div class="size-info">
+          1200 x 630px (블로그 썸네일 최적 사이즈)
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('thumbnailCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentTemplate = 'gradient1';
+
+    const templates = {
+      gradient1: { type: 'gradient', colors: ['#667eea', '#764ba2'] },
+      gradient2: { type: 'gradient', colors: ['#f093fb', '#f5576c'] },
+      gradient3: { type: 'gradient', colors: ['#4facfe', '#00f2fe'] },
+      gradient4: { type: 'gradient', colors: ['#43e97b', '#38f9d7'] },
+      gradient5: { type: 'gradient', colors: ['#fa709a', '#fee140'] },
+      gradient6: { type: 'gradient', colors: ['#30cfd0', '#330867'] },
+      solid1: { type: 'solid', color: '#1e293b' },
+      solid2: { type: 'solid', color: '#ffffff' },
+      pattern1: { type: 'gradient', colors: ['#667eea', '#764ba2'] },
+      pattern2: { type: 'gradient', colors: ['#606dbc', '#465298'] }
+    };
+
+    function selectTemplate(template) {
+      currentTemplate = template;
+      document.querySelectorAll('.template-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`[data-template="${template}"]`).classList.add('active');
+      generateThumbnail();
+    }
+
+    function updateColorValue(type) {
+      const picker = document.getElementById(type + 'Color');
+      const value = document.getElementById(type + 'ColorValue');
+      value.value = picker.value;
+    }
+
+    function generateThumbnail() {
+      const mainText = document.getElementById('mainText').value || '썸네일 제목을 입력하세요';
+      const subText = document.getElementById('subText').value;
+      const mainColor = document.getElementById('mainColor').value;
+      const subColor = document.getElementById('subColor').value;
+      const template = templates[currentTemplate];
+
+      // 배경 그리기
+      if (template.type === 'gradient') {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, template.colors[0]);
+        gradient.addColorStop(1, template.colors[1]);
+        ctx.fillStyle = gradient;
+      } else {
+        ctx.fillStyle = template.color;
+      }
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 반투명 오버레이 (가독성 향상)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 텍스트 그리기
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // 메인 텍스트
+      ctx.fillStyle = mainColor;
+      ctx.font = 'bold 80px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+      
+      // 텍스트 길이에 따라 폰트 크기 조정
+      if (mainText.length > 15) {
+        ctx.font = 'bold 60px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+      }
+      if (mainText.length > 20) {
+        ctx.font = 'bold 50px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+      }
+
+      // 텍스트 그림자
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 5;
+
+      const centerY = subText ? canvas.height / 2 - 40 : canvas.height / 2;
+      ctx.fillText(mainText, canvas.width / 2, centerY);
+
+      // 서브 텍스트
+      if (subText) {
+        ctx.shadowBlur = 15;
+        ctx.fillStyle = subColor;
+        ctx.font = '40px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+        ctx.fillText(subText, canvas.width / 2, canvas.height / 2 + 60);
+      }
+
+      // 그림자 초기화
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
+      // 장식 요소 (선택적)
+      drawDecoration();
+    }
+
+    function drawDecoration() {
+      // 왼쪽 상단 장식
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.beginPath();
+      ctx.arc(100, 100, 150, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 오른쪽 하단 장식
+      ctx.beginPath();
+      ctx.arc(canvas.width - 100, canvas.height - 100, 200, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function downloadThumbnail() {
+      const mainText = document.getElementById('mainText').value || 'thumbnail';
+      const filename = mainText.substring(0, 20).replace(/[^a-z0-9가-힣]/gi, '_') + '.png';
+      
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    // 초기 생성
+    generateThumbnail();
+  </script>
+</body>
+</html>
