@@ -3,279 +3,630 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>고수익 키워드 생성기 | GrewTools</title>
-  <meta name="description" content="씨앗 키워드로 고수익 롱테일 키워드를 자동 생성" />
-
-  <link rel="stylesheet" href="/assets/responsive.css">
+  <title>AI 키워드 생성기 — GrewTools</title>
+  <meta name="description" content="블로그 고수익 키워드 자동 생성. 씨앗 키워드에서 롱테일, 제목, 메타 설명까지 한 번에." />
   <link rel="icon" href="/assets/favicon.ico" />
-
   <style>
-    .page-keyword {
-      font-family:'Noto Sans KR',Pretendard,sans-serif;
-      background:#faf7f2;
-      color:#333;
-      margin:0;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .page-keyword header {
-      position:relative !important;
-      z-index:1 !important;
-      overflow:visible !important;
+    /* 헤더 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+    }
+    .logo-text h1 { font-size: 18px; font-weight: 700; }
+    .logo-text p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
 
-      padding:30px 20px;
-      text-align:center;
-      color:#fff;
-      background:linear-gradient(135deg,#6fbf73,#ffd9b3);
-      border-bottom-left-radius:30px;
-      border-bottom-right-radius:30px;
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.2); }
+    .action-btn.primary {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
     }
 
-    .page-keyword .wrap {
-      max-width:1100px;
-      margin:40px auto;
-      background:#fff;
-      border-radius:20px;
-      padding:30px;
-      box-shadow:0 4px 12px rgba(0,0,0,.08);
+    /* 메인 */
+    .main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
     }
 
-    .page-keyword .row {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .page-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.6);
     }
 
-    .page-keyword input[type=text],
-    .page-keyword select,
-    .page-keyword textarea {
-      border:1px solid #d9d4cd;
-      border-radius:12px;
-      padding:12px 14px;
-      font-size:15px;
+    /* 입력 섹션 */
+    .input-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .input-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      gap: 16px;
+      align-items: end;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+    }
+    .input-field {
+      padding: 14px 18px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #f59e0b;
+    }
+    .input-field::placeholder {
+      color: rgba(255,255,255,0.3);
     }
 
-    .page-keyword table {
-      width:100%;
-      border-collapse:collapse;
-      background:#fff;
-      border-radius:14px;
-      overflow:hidden;
+    select.input-field {
+      cursor: pointer;
+    }
+    select.input-field option {
+      background: #1a1a2e;
+      color: #fff;
     }
 
-    .page-keyword th, .page-keyword td {
-      padding:10px 12px;
-      border-bottom:1px solid #f2eee8;
-      text-align:left;
-      font-size:14px;
+    .generate-btn {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
     }
 
-    .page-keyword button {
-      background:#6fbf73;
-      color:#fff;
-      border:none;
-      border-radius:20px;
-      padding:12px 18px;
-      cursor:pointer;
-      transition:.2s;
+    .note {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
     }
 
-    .page-keyword button:hover { background:#5aa261; }
+    /* 결과 섹션 */
+    .results-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-    .page-keyword footer {
-      text-align:center;
-      padding:30px 20px;
-      font-size:.9em;
-      color:#777;
-      border-top:1px solid #e0ddd8;
-      margin-top:40px;
+    /* 테이블 */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead {
+      background: rgba(245, 158, 11, 0.1);
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    th {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+    tbody tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .badge.info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .badge.trans { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .badge.comm { background: rgba(236, 72, 153, 0.2); color: #f9a8d4; }
+    .badge.easy { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .badge.medium { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+    .badge.hard { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+    /* 액션 버튼 */
+    .table-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .table-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .table-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255,255,255,0.4);
+    }
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .hidden { display: none; }
+
+    /* 반응형 */
+    @media (max-width: 1024px) {
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main { padding: 24px 16px; }
+      .page-title { font-size: 28px; }
+      .input-section { padding: 24px 20px; }
+      .results-section { padding: 24px 20px; }
     }
   </style>
 </head>
-
-<body class="page-keyword">
-  <div id="gt-nav"></div>
-  <script src="/assets/nav-loader.js" defer></script>
-  <script src="/assets/nav.js" defer></script>
-
-  <header>
-    <h1>💡 고수익 키워드 생성기</h1>
-    <p>씨앗 키워드 → 롱테일 → 제목/메타까지 자동 생성</p>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">💡</div>
+      <div class="logo-text">
+        <h1>키워드 생성기</h1>
+        <p>AI 블로그 키워드</p>
+      </div>
+    </a>
+    <div class="header-actions">
+      <a href="/" class="action-btn primary">🏠 홈</a>
+    </div>
   </header>
 
-  <div class="wrap">
-    <div class="grid">
-      <div class="col-12">
-        <div class="card">
-          <div class="row">
-            <label for="seed">씨앗 키워드</label>
-          </div>
-          <div class="row">
-            <input id="seed" type="text" placeholder="예) 무선 청소기 / 유산균 / 여행 가방" />
-            <select id="market">
-              <option value="kr" selected>한국 (KR)</option>
-              <option value="us">미국 (US)</option>
-              <option value="jp">일본 (JP)</option>
-            </select>
-            <select id="count">
-              <option>20</option><option selected>40</option><option>60</option>
-            </select>
-            <button onclick="generate()">생성</button>
-          </div>
-          <p class="muted">* 이 도구는 규칙 기반 로컬 생성기입니다. 실제 검색량/난이도는 추정값으로, Search Console/광고 도구로 검증하세요.</p>
+  <!-- 메인 -->
+  <main class="main">
+    <div class="page-header">
+      <h2 class="page-title">💡 고수익 키워드 생성기</h2>
+      <p class="page-subtitle">씨앗 키워드 → 롱테일 → 제목/메타까지 자동 생성</p>
+    </div>
+
+    <!-- 입력 섹션 -->
+    <div class="input-section">
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label">씨앗 키워드</label>
+          <input type="text" class="input-field" id="seedKeyword" placeholder="예: 다이어트, 부업, 요리" />
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">국가</label>
+          <select class="input-field" id="country">
+            <option value="kr">한국 (KR)</option>
+            <option value="us">미국 (US)</option>
+            <option value="jp">일본 (JP)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">개수</label>
+          <select class="input-field" id="count">
+            <option value="20">20개</option>
+            <option value="40" selected>40개</option>
+            <option value="60">60개</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">&nbsp;</label>
+          <button class="generate-btn" id="generateBtn">
+            ⚡ 생성
+          </button>
         </div>
       </div>
 
-      <div class="col-12 ads"></div>
-
-      <div class="col-12">
-        <div class="card">
-          <h3 style="margin:6px 0 10px">🎯 의도별 추천 키워드</h3>
-          <div id="clusters"></div>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="card">
-          <h3 style="margin:6px 0 10px">📝 블로그용 제목 · 메타 설명 제안</h3>
-          <table id="ideasTbl">
-            <thead>
-              <tr><th style="width:38%">제목(클릭 유도형)</th><th>메타 설명 (120~155자)</th><th style="width:18%">태그</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div class="row" style="justify-content:flex-end;gap:10px;margin-top:10px">
-            <button onclick="copyTable('ideasTbl')">표 복사</button>
-            <button onclick="exportCSV()">CSV 다운로드</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="card">
-          <h3 style="margin:6px 0 10px">🔍 롱테일 키워드 목록</h3>
-          <table id="kwTbl">
-            <thead>
-              <tr><th style="width:38%">키워드</th><th style="width:18%">의도</th><th style="width:18%">난이도(추정)</th><th>비고</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div class="row" style="justify-content:flex-end;gap:10px;margin-top:10px">
-            <button onclick="copyTable('kwTbl')">표 복사</button>
-            <button onclick="exportCSV('kw')">CSV 다운로드</button>
-          </div>
-        </div>
+      <div class="note">
+        * 이 도구는 규칙 기반 로컬 생성기입니다. 실제 검색량/난이도는 추정값으로, Search Console/광고 도구로 검증하세요.
       </div>
     </div>
-  </div>
 
-  <footer>
-    <p>© 2025 GrewTools. All rights reserved. | 본 페이지에는 제휴 링크가 포함됩니다.</p>
-  </footer>
+    <!-- 의도별 키워드 -->
+    <div class="results-section" id="intentSection">
+      <h3 class="section-title">🎯 의도별 추천 키워드</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>키워드</th>
+              <th>의도</th>
+              <th>난이도</th>
+              <th>추천 이유</th>
+            </tr>
+          </thead>
+          <tbody id="intentTable">
+            <tr>
+              <td colspan="4">
+                <div class="empty-state">
+                  <div class="empty-icon">🔍</div>
+                  <p>씨앗 키워드를 입력하고 생성 버튼을 눌러주세요</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 블로그용 제목/메타 -->
+    <div class="results-section" id="titleSection">
+      <h3 class="section-title">📝 블로그용 제목 · 메타 설명 제안</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>제목 (클릭 유도형)</th>
+              <th>메타 설명 (120~155자)</th>
+              <th>태그</th>
+            </tr>
+          </thead>
+          <tbody id="titleTable">
+            <tr>
+              <td colspan="3">
+                <div class="empty-state">
+                  <div class="empty-icon">📝</div>
+                  <p>키워드를 생성하면 자동으로 제목과 메타 설명이 만들어집니다</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="table-btn" id="copyTitleBtn">📋 표 복사</button>
+        <button class="table-btn" id="downloadTitleBtn">💾 CSV 다운로드</button>
+      </div>
+    </div>
+
+    <!-- 롱테일 키워드 -->
+    <div class="results-section" id="longtailSection">
+      <h3 class="section-title">🔍 롱테일 키워드 목록</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>키워드</th>
+              <th>의도</th>
+              <th>난이도 (추정)</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody id="longtailTable">
+            <tr>
+              <td colspan="4">
+                <div class="empty-state">
+                  <div class="empty-icon">💡</div>
+                  <p>최대 60개의 롱테일 키워드가 생성됩니다</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-actions">
+        <button class="table-btn" id="copyLongtailBtn">📋 표 복사</button>
+        <button class="table-btn" id="downloadLongtailBtn">💾 CSV 다운로드</button>
+      </div>
+    </div>
+  </main>
 
   <script>
-    const INTENTS = [
-      {key:'informational', label:'정보'},
-      {key:'commercial', label:'비교'},
-      {key:'transactional', label:'구매'},
-      {key:'howto', label:'방법'},
-      {key:'review', label:'후기'}
-    ];
-    const MODS = {
-      kr: {
-        informational: ['란','정의','장점','단점','부작용','효과','종류'],
-        commercial: ['비교','추천','가성비','순위','Top 10','브랜드별'],
-        transactional: ['최저가','쿠폰','구매처','가격','세일','공식몰'],
-        howto: ['사용법','설치 방법','세척 방법','선택 기준','세팅'],
-        review: ['실사용 후기','내돈내산','3개월 사용기','장단점 솔직 후기']
-      },
-      us: {
-        informational:['what is','benefits','types','pros and cons'],
-        commercial:['vs','best','top 10','compare','guide'],
-        transactional:['price','coupon','where to buy','deal','official'],
-        howto:['how to use','setup','cleaning','tips'],
-        review:['review','hands-on','long-term review']
-      },
-      jp: {
-        informational:['とは','効果','種類','メリット','デメリット'],
-        commercial:['比較','おすすめ','ランキング','コスパ'],
-        transactional:['最安値','クーポン','購入先','価格'],
-        howto:['使い方','設置方法','掃除方法','選び方'],
-        review:['レビュー','実機','長期使用感']
-      }
+    // 키워드 생성 로직
+    const prefixes = ['초보', '전문가', '완벽한', '쉬운', '빠른', '최고의', '추천', '인기'];
+    const suffixes = ['방법', '가이드', '팁', '후기', '추천', '비교', '순위', '리뷰'];
+    const questions = ['방법', '하는법', '뜻', '의미', '차이', '장단점', '효과', '추천'];
+    const intents = {
+      info: '정보형',
+      trans: '거래형',
+      comm: '상업형'
     };
-    const DIFF = ['낮음','보통','높음'];
-    function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
-    function generate(){
-      const seed = (document.getElementById('seed').value||'마크다운 변환기').trim();
-      const market = document.getElementById('market').value;
-      const N = parseInt(document.getElementById('count').value,10)||40;
-      const sets = MODS[market];
-      if(!seed){ alert('씨앗 키워드를 입력해주세요.'); return; }
-      const rowsKW=[];
-      const clusters={};
-      INTENTS.forEach(i=>clusters[i.key]=[]);
-      const intentsOrder=['informational','commercial','transactional','howto','review'];
-      for(let i=0;i<N;i++){
-        const intent = intentsOrder[i % intentsOrder.length];
-        const mod = pick(sets[intent]);
-        let phrase;
-        if(market==='kr') phrase = `${seed} ${mod}`;
-        else if(market==='us') phrase = `${mod} ${seed}`;
-        else phrase = `${seed} ${mod}`;
-        const diff = pick(DIFF);
-        const note = intent==='commercial' ? '비교/리스트형 콘텐츠 적합' : (intent==='transactional' ? '수익형(구매 의도) 강함' : '정보형');
-        rowsKW.push({kw:phrase,intent:intent,diff:diff,note:note});
-        clusters[intent].push(phrase);
+
+    document.getElementById('generateBtn').addEventListener('click', generateKeywords);
+
+    function generateKeywords() {
+      const seed = document.getElementById('seedKeyword').value.trim();
+      if (!seed) {
+        alert('씨앗 키워드를 입력해주세요!');
+        return;
       }
-      const $clusters = document.getElementById('clusters');
-      $clusters.innerHTML = '';
-      INTENTS.forEach(({key,label})=>{
-        if(!clusters[key].length) return;
-        const box = document.createElement('div');
-        box.className='card';
-        box.innerHTML = `<div class="pill">${label}</div>` +
-          '<div style="margin-top:6px">' + clusters[key].slice(0,10).map(k=>`<span class="tag">${escapeHtml(k)}</span>`).join(' ') + '</div>';
-        $clusters.appendChild(box);
-      });
-      const kwBody = document.querySelector('#kwTbl tbody');
-      kwBody.innerHTML = rowsKW.map(r=>`<tr><td>${escapeHtml(r.kw)}</td><td>${labelIntent(r.intent)}</td><td>${r.diff}</td><td>${r.note}</td></tr>`).join('');
-      const ideaRows = buildIdeas(seed, market);
-      const ideasBody = document.querySelector('#ideasTbl tbody');
-      ideasBody.innerHTML = ideaRows.map(r=>`<tr><td>${escapeHtml(r.title)}</td><td>${escapeHtml(r.meta)}</td><td>${r.tags.map(t=>`<span class='tag'>${escapeHtml(t)}</span>`).join(' ')}</td></tr>`).join('');
+
+      const count = parseInt(document.getElementById('count').value);
+      
+      // 의도별 키워드 생성
+      generateIntentKeywords(seed);
+      
+      // 제목/메타 생성
+      generateTitles(seed);
+      
+      // 롱테일 생성
+      generateLongtail(seed, count);
     }
-    function buildIdeas(seed, market){
-      const titles=[
-        `${seed} 가이드: 처음부터 확실히 끝내는 사용법` ,
-        `${seed} 비교 분석: 가성비 vs 고급형, 어떤 걸 살까?`,
-        `${seed} 장단점 총정리와 똑똑한 선택 기준`,
-        `${seed} 실사용 후기: 2주 사용하고 알게 된 핵심 팁 7가지`,
-        `${seed} 구매 체크리스트 & 실수 방지 포인트`
+
+    function generateIntentKeywords(seed) {
+      const keywords = [
+        { keyword: `${seed} 뜻`, intent: 'info', difficulty: 'easy', reason: '기본 정보 검색 수요' },
+        { keyword: `${seed} 방법`, intent: 'info', difficulty: 'easy', reason: 'How-to 검색 의도' },
+        { keyword: `${seed} 추천`, intent: 'comm', difficulty: 'medium', reason: '상업적 검색 의도' },
+        { keyword: `${seed} 후기`, intent: 'comm', difficulty: 'medium', reason: '구매 전 리서치' },
+        { keyword: `${seed} 구매`, intent: 'trans', difficulty: 'medium', reason: '거래 직전 단계' },
+        { keyword: `최고의 ${seed}`, intent: 'comm', difficulty: 'hard', reason: '비교/추천 검색' }
       ];
-      return titles.map(t=>({
-        title:t,
-        meta:`${seed} 관련 핵심 정보를 한눈에 정리했습니다. 실제 사용 팁과 비교 포인트, 구매 전 확인해야 할 체크리스트를 담아 초보자도 쉽게 선택할 수 있도록 도와드립니다.`.slice(0,155),
-        tags:[seed,'비교','가성비','추천','후기']
-      }));
+
+      const tbody = document.getElementById('intentTable');
+      tbody.innerHTML = keywords.map(kw => `
+        <tr>
+          <td><strong>${kw.keyword}</strong></td>
+          <td><span class="badge ${kw.intent}">${intents[kw.intent]}</span></td>
+          <td><span class="badge ${kw.difficulty}">${kw.difficulty === 'easy' ? '쉬움' : kw.difficulty === 'medium' ? '보통' : '어려움'}</span></td>
+          <td>${kw.reason}</td>
+        </tr>
+      `).join('');
     }
-    function labelIntent(key){ return INTENTS.find(i=>i.key===key)?.label||key; }
-    function escapeHtml(s){ return s.replace(/[&<>\"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
-    function tableToCSV(tblId){
-      const rows = Array.from(document.querySelectorAll(`#${tblId} tr`));
-      return rows.map(tr=>Array.from(tr.children).map(td=>`"${td.innerText.replace(/\"/g,'\"\"')}"`).join(',')).join('\n');
+
+    function generateTitles(seed) {
+      const titles = [
+        {
+          title: `${seed} 완벽 가이드 | 초보자도 5분 만에 이해하는 방법`,
+          meta: `${seed}에 대한 모든 것을 알려드립니다. 기초부터 실전 활용까지, 초보자도 쉽게 따라할 수 있는 완벽 가이드입니다.`,
+          tags: `${seed}, ${seed} 방법, ${seed} 가이드`
+        },
+        {
+          title: `2025 최신 ${seed} 추천 TOP 10 | 실제 사용 후기`,
+          meta: `직접 사용해본 ${seed} 제품을 비교 분석했습니다. 장단점, 가격, 후기를 한눈에 확인하세요.`,
+          tags: `${seed} 추천, ${seed} 후기, ${seed} 비교`
+        },
+        {
+          title: `${seed} 초보 탈출! 전문가가 알려주는 핵심 팁 7가지`,
+          meta: `${seed} 전문가가 직접 공개하는 실전 노하우. 이것만 알면 누구나 바로 적용할 수 있습니다.`,
+          tags: `${seed} 팁, ${seed} 노하우, ${seed} 초보`
+        }
+      ];
+
+      const tbody = document.getElementById('titleTable');
+      tbody.innerHTML = titles.map(t => `
+        <tr>
+          <td><strong>${t.title}</strong></td>
+          <td>${t.meta}</td>
+          <td><code style="font-size: 11px; color: #fcd34d;">${t.tags}</code></td>
+        </tr>
+      `).join('');
     }
-    function exportCSV(which){
-      const id = which==='kw' ? 'kwTbl' : 'ideasTbl';
-      const csv = tableToCSV(id);
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = (which==='kw'?'keywords':'ideas') + '_' + Date.now() + '.csv';
-      a.click();
+
+    function generateLongtail(seed, count) {
+      const keywords = [];
+      
+      // 조합 생성
+      prefixes.forEach(p => {
+        keywords.push({
+          keyword: `${p} ${seed}`,
+          intent: 'info',
+          difficulty: 'easy',
+          note: '수식어 조합'
+        });
+      });
+
+      suffixes.forEach(s => {
+        keywords.push({
+          keyword: `${seed} ${s}`,
+          intent: Math.random() > 0.5 ? 'info' : 'comm',
+          difficulty: 'easy',
+          note: '접미사 조합'
+        });
+      });
+
+      questions.forEach(q => {
+        keywords.push({
+          keyword: `${seed} ${q}`,
+          intent: 'info',
+          difficulty: 'easy',
+          note: '질의형'
+        });
+      });
+
+      // 2단 조합
+      prefixes.slice(0, 3).forEach(p => {
+        suffixes.slice(0, 3).forEach(s => {
+          keywords.push({
+            keyword: `${p} ${seed} ${s}`,
+            intent: 'comm',
+            difficulty: 'medium',
+            note: '2단 조합'
+          });
+        });
+      });
+
+      // count만큼만 선택
+      const selected = keywords.slice(0, count);
+
+      const tbody = document.getElementById('longtailTable');
+      tbody.innerHTML = selected.map(kw => `
+        <tr>
+          <td><strong>${kw.keyword}</strong></td>
+          <td><span class="badge ${kw.intent}">${intents[kw.intent]}</span></td>
+          <td><span class="badge ${kw.difficulty}">${kw.difficulty === 'easy' ? '쉬움' : '보통'}</span></td>
+          <td>${kw.note}</td>
+        </tr>
+      `).join('');
     }
-    function copyTable(id){
-      const html = document.getElementById(id).outerHTML;
-      navigator.clipboard.writeText(html).then(()=>alert('표 HTML이 복사되었습니다. 블로그 HTML 모드/변환기로 붙여넣으세요.'));
+
+    // 복사 기능
+    document.getElementById('copyTitleBtn').addEventListener('click', () => {
+      copyTable('titleTable');
+    });
+
+    document.getElementById('copyLongtailBtn').addEventListener('click', () => {
+      copyTable('longtailTable');
+    });
+
+    function copyTable(tableId) {
+      const table = document.getElementById(tableId).parentElement;
+      const range = document.createRange();
+      range.selectNode(table);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      alert('표가 복사되었습니다!');
+    }
+
+    // CSV 다운로드
+    document.getElementById('downloadTitleBtn').addEventListener('click', () => {
+      downloadCSV('titleTable', '블로그_제목_메타.csv');
+    });
+
+    document.getElementById('downloadLongtailBtn').addEventListener('click', () => {
+      downloadCSV('longtailTable', '롱테일_키워드.csv');
+    });
+
+    function downloadCSV(tableId, filename) {
+      const table = document.getElementById(tableId).parentElement;
+      let csv = [];
+      const rows = table.querySelectorAll('tr');
+      
+      rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = Array.from(cols).map(col => '"' + col.textContent.trim() + '"');
+        csv.push(rowData.join(','));
+      });
+
+      const csvContent = '\uFEFF' + csv.join('\n'); // UTF-8 BOM
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
     }
   </script>
 </body>
